@@ -214,7 +214,7 @@ namespace Lima
 
     private void UpdateChartDataSets()
     {
-      if (_history == null) return;
+      if (_history == null || _history.Intervals == null) return;
 
       var subSet = _history.Intervals[ChartIntervalIndex].Item3;
       var len = subSet.Length;

@@ -111,11 +111,13 @@ namespace Lima
     {
       base.Dispose();
 
-      GameSession.Instance.RemoveManagerFromBlock(_block);
-
-      _app?.Dispose();
-      _terminalBlock.OnMarkForClose -= BlockMarkedForClose;
-      GameSession.Instance.NetBlockHandler.MessageReceivedEvent -= OnBlockContentReceived;
+      if (_init || _app != null)
+      {
+        GameSession.Instance.RemoveManagerFromBlock(_block);
+        _app?.Dispose();
+        _terminalBlock.OnMarkForClose -= BlockMarkedForClose;
+        GameSession.Instance.NetBlockHandler.MessageReceivedEvent -= OnBlockContentReceived;
+      }
     }
 
     private void BlockMarkedForClose(IMyEntity ent)
