@@ -3,6 +3,7 @@ using Sandbox.Game.Entities;
 using Sandbox.Game.GameSystems.TextSurfaceScripts;
 using Sandbox.ModAPI;
 using VRage.Game;
+using VRage.Game.GUI.TextPanel;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.Utils;
@@ -125,16 +126,36 @@ namespace Lima
       Dispose();
     }
 
+    private MySprite GetAccessDeniedSprite()
+    {
+      return new MySprite()
+      {
+        Type = SpriteType.TEXT,
+        Data = "Electric Network Info\nThis App is not shared with you!",
+        RotationOrScale = 0.7f,
+        Color = _surface.ScriptForegroundColor,
+        Alignment = TextAlignment.CENTER,
+        Size = _surface.SurfaceSize
+      };
+    }
+
     public override void Run()
     {
-      // Sandbox.Game.MyVisualScriptLogicProvider.SendChatMessage($"Run", "SampleApp");
       try
       {
         if (!_init && ticks++ < (6 * 2)) // 2 secs
           return;
 
         if (!IsOwnerOrFactionShare())
+        {
+          base.Run();
+          using (var frame = m_surface.DrawFrame())
+          {
+            frame.Add(GetAccessDeniedSprite());
+            frame.Dispose();
+          }
           return;
+        }
 
         if (!_init)
           Init();
@@ -143,7 +164,6 @@ namespace Lima
           return;
 
         base.Run();
-
         using (var frame = m_surface.DrawFrame())
         {
           _app.ForceUpdate();
