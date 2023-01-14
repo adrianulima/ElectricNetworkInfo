@@ -46,12 +46,15 @@ namespace Lima
     private MyDefinitionId _electricityId = MyResourceDistributorComponent.ElectricityId;
 
     public event Action UpdateEvent;
+    public bool Disposed { get; private set; } = false;
 
     public PowerStats CurrentPowerStats = new PowerStats();
     public BatteryStats CurrentBatteryStats = new BatteryStats();
 
     public readonly PowerStatsHistory History = new PowerStatsHistory();
 
+    private IMyCubeGrid _gridToHandleNextUpdate;
+    private IMyGridGroupData _gridGroup;
     private readonly List<IMyCubeGrid> _grids = new List<IMyCubeGrid>();
 
     private readonly List<MyCubeBlock> _inputList = new List<MyCubeBlock>();
@@ -64,9 +67,9 @@ namespace Lima
     public ElectricNetworkManager(IMyCubeBlock lcdBlock)
     {
       _lcdBlocks = new List<IMyCubeBlock>() { lcdBlock };
-      HandleGrid(lcdBlock.CubeGrid);
 
-      LoadAppContent();
+      HandleGridGroup(lcdBlock.CubeGrid);
+      LoadGridContent(lcdBlock.CubeGrid);
     }
 
     public MyTuple<IMyCubeGrid, GridStorageContent> GenerateGridContent()
@@ -82,9 +85,9 @@ namespace Lima
       });
     }
 
-    public void LoadAppContent()
+    public void LoadGridContent(IMyCubeGrid gridCube)
     {
-      var content = GameSession.Instance.GridHandler.LoadGridContent(_lcdBlocks[0].CubeGrid);
+      var content = GameSession.Instance.GridHandler.LoadGridContent(gridCube);
       if (content != null)
       {
         History.Intervals[0].Item3 = content.History_0;
@@ -101,93 +104,89 @@ namespace Lima
       History.Dispose();
       _lcdBlocks.Clear();
       UpdateEvent = null;
+      Disposed = true;
     }
 
     public void Clear()
     {
+      _gridGroup.OnGridRemoved -= OnGridRemovedFromGroup;
+      _gridGroup.OnGridAdded -= OnGridAddedToGroup;
+
+      foreach (MyCubeGrid grid in _grids)
+      {
+        grid.OnBlockAdded -= OnBlockAddedToGrid;
+        grid.OnBlockRemoved -= OnBlockRemovedFromGrid;
+      }
+
       _grids.Clear();
       _inputList.Clear();
       _outputList.Clear();
       _thrustersList.Clear();
       ProductionBlocks.Clear();
       ConsumptionBlocks.Clear();
-
-      foreach (MyCubeGrid grid in _grids)
-      {
-        grid.OnBlockAdded -= OnBlockAddedToGrid;
-        grid.OnBlockRemoved -= OnBlockRemovedFromGrid;
-        grid.OnConnectionChanged -= OnConnectGrid;
-      }
     }
 
-    private void HandleGrid(IMyCubeGrid cubeGrid)
+    private void HandleGridGroup(IMyCubeGrid gridCube)
     {
-      MyAPIGateway.GridGroups.GetGroup(cubeGrid, GridLinkTypeEnum.Physical, _grids);
+      _gridGroup = MyAPIGateway.GridGroups.GetGridGroup(GridLinkTypeEnum.Electrical, gridCube);
+      _gridGroup.OnGridAdded -= OnGridAddedToGroup;
+      _gridGroup.OnGridRemoved -= OnGridRemovedFromGroup;
+      _gridGroup.OnGridAdded += OnGridAddedToGroup;
+      _gridGroup.OnGridRemoved += OnGridRemovedFromGroup;
 
+      _gridGroup.GetGrids(_grids);
       foreach (MyCubeGrid grid in _grids)
-      {
-        grid.OnBlockAdded -= OnBlockAddedToGrid;
-        grid.OnBlockRemoved -= OnBlockRemovedFromGrid;
-        grid.OnConnectionChanged -= OnConnectGrid;
-        grid.OnBlockAdded += OnBlockAddedToGrid;
-        grid.OnBlockRemoved += OnBlockRemovedFromGrid;
-        grid.OnConnectionChanged += OnConnectGrid;
+        HandleGrid(grid);
+    }
 
-        foreach (MyCubeBlock block in grid.GetFatBlocks())
-        {
-          HandleBlock(block);
-        }
-      }
+    private void HandleGrid(MyCubeGrid grid)
+    {
+      grid.OnBlockAdded -= OnBlockAddedToGrid;
+      grid.OnBlockRemoved -= OnBlockRemovedFromGrid;
+      grid.OnBlockAdded += OnBlockAddedToGrid;
+      grid.OnBlockRemoved += OnBlockRemovedFromGrid;
+
+      foreach (MyCubeBlock block in grid.GetFatBlocks())
+        HandleBlock(block);
     }
 
     private void HandleBlock(MyCubeBlock block)
     {
       if (block is IMyBatteryBlock)
-      {
         _inputList.Add(block);
-      }
       else
       {
         var thruster = block as MyThrust;
         if (thruster != null && thruster.FuelDefinition.Id == _electricityId)
-        {
           _thrustersList.Add(block);
-        }
         else
         {
           MyResourceSinkComponent sink = block.Components?.Get<MyResourceSinkComponent>();
           if (sink != null && sink.AcceptedResources.IndexOf(_electricityId) != -1)
-          {
             _inputList.Add(block);
-          }
         }
       }
 
       var source = block.Components?.Get<MyResourceSourceComponent>();
       if (source != null && source.ResourceTypes.IndexOf(_electricityId) != -1)
-      {
         _outputList.Add(block);
+    }
+
+    private void OnGridAddedToGroup(IMyGridGroupData group, IMyCubeGrid grid, IMyGridGroupData otherGroup)
+    {
+      var cubeGrid = grid as MyCubeGrid;
+      if (cubeGrid != null)
+      {
+        _grids.Add(grid);
+        HandleGrid(cubeGrid);
       }
     }
 
-    private void OnConnectGrid(MyCubeGrid grid, GridLinkTypeEnum linkType)
+    private void OnGridRemovedFromGroup(IMyGridGroupData group, IMyCubeGrid grid, IMyGridGroupData otherGroup)
     {
-      try
-      {
-        if (linkType == GridLinkTypeEnum.Electrical)
-        {
-          Clear();
-          HandleGrid(_lcdBlocks[0].CubeGrid);
-        }
-      }
-      catch (Exception e)
-      {
-        GameSession.Instance.RemoveManager(this);
-        MyLog.Default.WriteLineAndConsole($"{e.Message}\n{e.StackTrace}");
-
-        if (MyAPIGateway.Session?.Player != null)
-          MyAPIGateway.Utilities.ShowNotification($"[ ERROR: {GetType().FullName}: {e.Message} ]", 5000, MyFontEnum.Red);
-      }
+      Clear();
+      if (_lcdBlocks.Count > 0)
+        _gridToHandleNextUpdate = _lcdBlocks[0].CubeGrid; // Next update so group is updated before checking
     }
 
     private void OnBlockAddedToGrid(IMySlimBlock slimBlock)
@@ -203,9 +202,6 @@ namespace Lima
       {
         GameSession.Instance.RemoveManager(this);
         MyLog.Default.WriteLineAndConsole($"{e.Message}\n{e.StackTrace}");
-
-        if (MyAPIGateway.Session?.Player != null)
-          MyAPIGateway.Utilities.ShowNotification($"[ ERROR: {GetType().FullName}: {e.Message} ]", 5000, MyFontEnum.Red);
       }
     }
 
@@ -225,9 +221,6 @@ namespace Lima
       {
         GameSession.Instance.RemoveManager(this);
         MyLog.Default.WriteLineAndConsole($"{e.Message}\n{e.StackTrace}");
-
-        if (MyAPIGateway.Session?.Player != null)
-          MyAPIGateway.Utilities.ShowNotification($"[ ERROR: {GetType().FullName}: {e.Message} ]", 5000, MyFontEnum.Red);
       }
     }
 
@@ -235,9 +228,8 @@ namespace Lima
     {
       if (_lcdBlocks[0].CubeGrid == lcdBlock.CubeGrid)
       {
-        if (!_lcdBlocks.Contains(lcdBlock))
-          _lcdBlocks.Add(lcdBlock);
-
+        // if (!_lcdBlocks.Contains(lcdBlock)) // let be added multiple times because of multi surface blocks
+        _lcdBlocks.Add(lcdBlock);
         return true;
       }
       return false;
@@ -245,13 +237,10 @@ namespace Lima
 
     public bool RemoveBlockAndCount(IMyCubeBlock lcdBlock)
     {
-      if (_grids.Contains(lcdBlock.CubeGrid))
+      if (_lcdBlocks.Contains(lcdBlock))
       {
-        if (_lcdBlocks.Contains(lcdBlock))
-        {
-          _lcdBlocks.Remove(lcdBlock);
-          return _lcdBlocks.Count == 0;
-        }
+        _lcdBlocks.Remove(lcdBlock);
+        return _lcdBlocks.Count == 0;
       }
       return false;
     }
@@ -267,6 +256,9 @@ namespace Lima
 
     private void UpdateDistributiorStatus()
     {
+      if (_lcdBlocks[0].CubeGrid.ResourceDistributor == null)
+        return;
+
       MyResourceDistributorComponent distributor = _lcdBlocks[0].CubeGrid.ResourceDistributor as MyResourceDistributorComponent;
       var grid = _lcdBlocks[0].CubeGrid as MyCubeGrid;
       CurrentBatteryStats.BatteryHoursLeft = distributor.RemainingFuelTimeByType(MyResourceDistributorComponent.ElectricityId, grid: grid);
@@ -276,6 +268,12 @@ namespace Lima
     public void Update()
     {
       // TODO: implement a tag to check if there is any tss that still active (player not distant)
+
+      if (_gridToHandleNextUpdate != null)
+      {
+        HandleGridGroup(_gridToHandleNextUpdate);
+        _gridToHandleNextUpdate = null;
+      }
 
       CurrentPowerStats = new PowerStats();
       CurrentBatteryStats = new BatteryStats();
