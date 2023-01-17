@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Lima.API;
 using Sandbox.ModAPI;
 using VRage.Game;
 using VRage.Game.Components;
 using VRage.Game.ModAPI;
+using VRage.Utils;
 
 namespace Lima
 {
@@ -121,19 +123,30 @@ namespace Lima
 
       if (wasPaused)
       {
-        prevTime = MyAPIGateway.Session.ElapsedPlayTime.TotalSeconds;
+        prevTime = MyAPIGateway.Session?.ElapsedPlayTime.TotalSeconds ?? 0;
         wasPaused = false;
       }
 
-      var secs = MyAPIGateway.Session.ElapsedPlayTime.TotalSeconds;
+      // This make the code ruturns if less than one second
+      var secs = MyAPIGateway.Session?.ElapsedPlayTime.TotalSeconds ?? 0;
       var diff = prevTime == 0 ? 0 : secs - prevTime - 1;
       if (diff < 0)
         return;
       prevTime = secs - diff;
 
-      if (_electricManagers != null)
-        foreach (var manager in _electricManagers)
-          manager.Update();
+      try
+      {
+        if (_electricManagers != null)
+          foreach (var manager in _electricManagers)
+            manager.Update();
+      }
+      catch (Exception e)
+      {
+        MyLog.Default.WriteLineAndConsole($"{e.Message}\n{e.StackTrace}");
+
+        if (MyAPIGateway.Session?.Player != null)
+          MyAPIGateway.Utilities.ShowNotification($"[ ERROR: {GetType().FullName}: {e.Message} ]", 5000, MyFontEnum.Red);
+      }
     }
 
     public override void UpdatingStopped()

@@ -13,6 +13,8 @@ namespace Lima
     public EntityListView ProductionList { get; private set; }
     public EntityListView ConsumptionList { get; private set; }
 
+    private EntityItemPooler _pooler = new EntityItemPooler(30);
+
     public void CreateElements()
     {
       Direction = ViewDirection.Row;
@@ -37,13 +39,13 @@ namespace Lima
       var bgColor = App.Theme.GetMainColorDarker(2);
 
       ProductionList.SetScrollViewBgColor(bgColor);
-      ProductionList.RemoveAllChildren();
+      ProductionList.RemoveAllChildren(_pooler);
 
       var productionList = electricMan.ProductionBlocks.ToList();
       productionList.Sort((pair1, pair2) => pair2.Value.Y.CompareTo(pair1.Value.Y));
       foreach (var item in productionList)
       {
-        var entity = new EntityItem(item.Key, App.Theme.WhiteColor);
+        var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
         entity.BgColor = App.Theme.GetMainColorDarker(4);
         entity.Count = (int)item.Value.X;
         entity.Value = item.Value.Y;
@@ -54,13 +56,13 @@ namespace Lima
       ProductionList.FillLastView();
 
       ConsumptionList.SetScrollViewBgColor(bgColor);
-      ConsumptionList.RemoveAllChildren();
+      ConsumptionList.RemoveAllChildren(_pooler);
 
       var consumptionList = electricMan.ConsumptionBlocks.ToList();
       consumptionList.Sort((pair1, pair2) => pair2.Value.Y.CompareTo(pair1.Value.Y));
       foreach (var item in consumptionList)
       {
-        var entity = new EntityItem(item.Key, App.Theme.WhiteColor);
+        var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
         entity.BgColor = App.Theme.GetMainColorDarker(4);
         entity.Count = (int)item.Value.X;
         entity.Value = item.Value.Y;

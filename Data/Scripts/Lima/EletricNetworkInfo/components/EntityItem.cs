@@ -1,4 +1,3 @@
-using System;
 using VRageMath;
 using Lima.API;
 using VRage.Game.GUI.TextPanel;
@@ -17,11 +16,11 @@ namespace Lima
     private TouchLabel _countLabel;
     private TouchProgressBar _progressBar;
 
-    public EntityItem(string title, Color TextColor) : base(ViewDirection.Column)
+    public EntityItem(string title, Color textColor) : base(ViewDirection.Column)
     {
       Title = title;
       SetStyles();
-      CreateElements(TextColor);
+      CreateElements(textColor);
     }
 
     private void SetStyles()
@@ -29,7 +28,7 @@ namespace Lima
       Padding = new Vector4(2);
     }
 
-    private void CreateElements(Color TextColor)
+    private void CreateElements(Color textColor)
     {
       _titleView = new TouchView(ViewDirection.Row);
       _titleView.Scale = new Vector2(1, 0);
@@ -37,11 +36,11 @@ namespace Lima
       AddChild(_titleView);
 
       _titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.LEFT);
-      _titleLabel.TextColor = TextColor;
+      _titleLabel.TextColor = textColor;
       _titleView.AddChild(_titleLabel);
 
       _countLabel = new TouchLabel("0", 0.4f, TextAlignment.RIGHT);
-      _countLabel.TextColor = TextColor;
+      _countLabel.TextColor = textColor;
       _countLabel.Scale = new Vector2(0, 1);
       _countLabel.Pixels = new Vector2(10, 0);
       _titleView.AddChild(_countLabel);
@@ -51,6 +50,12 @@ namespace Lima
       _progressBar.Pixels = new Vector2(0, 16);
       _progressBar.Label.FontSize = 0.35f;
       AddChild(_progressBar);
+    }
+
+    public void UpdateColors(Color textColor)
+    {
+      _titleLabel.TextColor = textColor;
+      _countLabel.TextColor = textColor;
     }
 
     public void UpdateValues()

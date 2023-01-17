@@ -256,13 +256,16 @@ namespace Lima
 
     private void UpdateDistributiorStatus()
     {
-      if (_lcdBlocks[0].CubeGrid.ResourceDistributor == null)
+      var grid = _lcdBlocks[0].CubeGrid as MyCubeGrid;
+      if (grid == null || _lcdBlocks[0].CubeGrid.ResourceDistributor == null)
         return;
 
       MyResourceDistributorComponent distributor = _lcdBlocks[0].CubeGrid.ResourceDistributor as MyResourceDistributorComponent;
-      var grid = _lcdBlocks[0].CubeGrid as MyCubeGrid;
-      CurrentBatteryStats.BatteryHoursLeft = distributor.RemainingFuelTimeByType(MyResourceDistributorComponent.ElectricityId, grid: grid);
-      CurrentBatteryStats.EnergyState = distributor.ResourceStateByType(MyResourceDistributorComponent.ElectricityId, grid: grid);
+      if (distributor != null)
+      {
+        CurrentBatteryStats.BatteryHoursLeft = distributor.RemainingFuelTimeByType(MyResourceDistributorComponent.ElectricityId, grid: grid);
+        CurrentBatteryStats.EnergyState = distributor.ResourceStateByType(MyResourceDistributorComponent.ElectricityId, grid: grid);
+      }
     }
 
     public void Update()

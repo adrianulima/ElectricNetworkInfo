@@ -46,12 +46,16 @@ namespace Lima
       _views.Clear();
     }
 
-    public void RemoveAllChildren()
+    public void RemoveAllChildren(EntityItemPooler pooler)
     {
       foreach (var v in _views)
       {
         foreach (var ch in v.Children)
+        {
+          var entt = ch as EntityItem;
+          if (entt != null) pooler.PutEntityItem(entt);
           v.RemoveChild(ch);
+        }
         _scrollView.RemoveChild(v);
       }
 
