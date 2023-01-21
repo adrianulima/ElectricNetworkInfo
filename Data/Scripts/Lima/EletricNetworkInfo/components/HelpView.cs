@@ -54,7 +54,7 @@ namespace Lima
       batteryCheckboxLabel.AutoBreakLine = true;
       batteryCheckboxLabel.TextColor = Color.Yellow;
       AddChild(batteryCheckboxLabel);
-      var batteryCheckboxText = new TouchLabel("If checked, battery output will count as production in the graph.", 0.5f);
+      var batteryCheckboxText = new TouchLabel("If checked, battery will count as production and capacity in the graph.", 0.5f);
       batteryCheckboxText.AutoBreakLine = true;
       batteryCheckboxText.Margin = new Vector4(0, 0, 0, 10);
       AddChild(batteryCheckboxText);

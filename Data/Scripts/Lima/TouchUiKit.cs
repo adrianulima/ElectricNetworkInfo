@@ -1,8 +1,9 @@
-using Sandbox.Game.Entities;
 using System.Collections.Generic;
 using System;
 using VRage.Game.GUI.TextPanel;
 using VRageMath;
+using IngameIMyTextSurface = Sandbox.ModAPI.Ingame.IMyTextSurface;
+using IngameIMyCubeBlock = VRage.Game.ModAPI.Ingame.IMyCubeBlock;
 
 namespace Lima.API
 {
@@ -298,7 +299,7 @@ namespace Lima.API
     public Func<object, object> TouchApp_GetTheme;
     public Func<object, bool> TouchApp_GetDefaultBg;
     public Action<object, bool> TouchApp_SetDefaultBg;
-    public Action<object, MyCubeBlock, Sandbox.ModAPI.Ingame.IMyTextSurface> TouchApp_InitApp;
+    public Action<object, IngameIMyCubeBlock, IngameIMyTextSurface> TouchApp_InitApp;
 
     public Func<Action, object> TouchEmptyButton_New;
     public Func<object, object> TouchEmptyButton_GetHandler;
@@ -623,7 +624,7 @@ namespace Lima.API
     /// Initiates the app, recommended to be called after a few seconds when used on a TSS.
     /// This method can fail if the block and surface are not ready for TouchScreen, catch any exceptions.
     /// </summary>
-    public virtual void InitApp(MyCubeBlock block, Sandbox.ModAPI.Ingame.IMyTextSurface surface) => Api.TouchApp_InitApp.Invoke(InternalObj, block, surface);
+    public virtual void InitApp(IngameIMyCubeBlock block, IngameIMyTextSurface surface) => Api.TouchApp_InitApp.Invoke(InternalObj, block, surface);
   }
   /// <summary>
   /// <see href="https://github.com/adrianulima/TouchScreenAPI/blob/main/Data/Scripts/Lima/Touch/UiKit/Elements/TouchEmptyButton.cs"/>

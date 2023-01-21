@@ -71,7 +71,7 @@ namespace Lima
       var color = App.Theme.MainColor;
 
       _chartView.BorderColor = bgColor;
-      _chartView.Border = new Vector4(2);
+      _chartView.Border = new Vector4(2, 2, 2, 0);
       _legendsView.BgColor = bgColor;
 
       foreach (var leg in _legends)
@@ -169,7 +169,7 @@ namespace Lima
 
       _legendsView = new TouchView(ViewDirection.Row);
       _legendsView.Alignment = ViewAlignment.Center;
-      _legendsView.Padding = new Vector4(8, 0, 4, 0);
+      _legendsView.Padding = new Vector4(8, 0, 2, 0);
       _legendsView.Scale = new Vector2(1, 0);
       _legendsView.Pixels = new Vector2(0, 20);
       AddChild(_legendsView);

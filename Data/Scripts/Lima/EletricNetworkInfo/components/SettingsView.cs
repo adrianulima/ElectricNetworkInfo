@@ -47,7 +47,7 @@ namespace Lima
 
       _containerView = new TouchView(ViewDirection.Row);
       _containerView.BorderColor = App.Theme.GetMainColorDarker(2);
-      _containerView.Border = new Vector4(2);
+      _containerView.Border = new Vector4(2, 2, 2, 0);
       _containerView.Padding = new Vector4(4);
       _containerView.Pixels = new Vector2(0, 48 * 4);
       _containerView.Scale = new Vector2(1, 0);
@@ -110,23 +110,20 @@ namespace Lima
       chartWrapper.AddChild(_chart);
 
       _legendsView = new TouchView(ViewDirection.Row);
-      _legendsView.Padding = new Vector4(8, 2, 4, 2);
+      _legendsView.Alignment = ViewAlignment.Center;
+      _legendsView.Padding = new Vector4(8, 0, 2, 0);
       _legendsView.Scale = new Vector2(1, 0);
       _legendsView.Pixels = new Vector2(0, 20);
       _legendsView.BgColor = App.Theme.GetMainColorDarker(2);
       AddChild(_legendsView);
 
       _legends[0] = new LegendItem("Consumption", _chartView.DataColors[3]);
-      _legends[0].Margin = Vector4.UnitY * 2;
       _legendsView.AddChild(_legends[0]);
       _legends[1] = new LegendItem("Max Consum.", _chartView.DataColors[2]);
-      _legends[1].Margin = Vector4.UnitY * 2;
       _legendsView.AddChild(_legends[1]);
       _legends[2] = new LegendItem("Production", _chartView.DataColors[1]);
-      _legends[2].Margin = Vector4.UnitY * 2;
       _legendsView.AddChild(_legends[2]);
       _legends[3] = new LegendItem("Capacity", _chartView.DataColors[0]);
-      _legends[3].Margin = Vector4.UnitY * 2;
       _legendsView.AddChild(_legends[3]);
 
       var buttonsContainer = new TouchView(ViewDirection.Row);

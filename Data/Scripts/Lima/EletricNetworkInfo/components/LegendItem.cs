@@ -10,7 +10,6 @@ namespace Lima
     public float Value;
 
     private Color _color;
-
     private TouchLabel _titleLabel;
     private TouchView _square;
 
@@ -53,7 +52,6 @@ namespace Lima
     public void UpdateValues()
     {
       var sv = ElectricNetworkInfoApp.PowerFormat(Value);
-
       _titleLabel.Text = sv;
     }
   }

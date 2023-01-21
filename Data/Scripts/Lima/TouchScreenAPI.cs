@@ -1,10 +1,12 @@
-using Sandbox.ModAPI;
+
 using System.Collections.Generic;
 using System;
 using VRage.Game.GUI.TextPanel;
-using VRage.Game.ModAPI;
 using VRage.Utils;
 using VRageMath;
+using MyAPIGateway = Sandbox.ModAPI.MyAPIGateway;
+using IngameIMyTextSurface = Sandbox.ModAPI.Ingame.IMyTextSurface;
+using IngameIMyCubeBlock = VRage.Game.ModAPI.Ingame.IMyCubeBlock;
 
 namespace Lima.API
 {
@@ -20,17 +22,15 @@ namespace Lima.API
     private bool _isInitiated;
     private bool _isRegistered;
 
-    private Func<IMyCubeBlock, IMyTextSurface, object> _createTouchScreen;
-    private Action<IMyCubeBlock, IMyTextSurface> _removeTouchScreen;
-    private Func<float> _getMaxInteractiveDistance;
-    private Action<float> _setMaxInteractiveDistance;
-    private Action<string> _addSurfaceCoords;
-    private Action<string> _removeSurfaceCoords;
-
     /// <summary>
     /// Wheter the API is ready to be used. True after <see cref="Load"/> is called.
     /// </summary>
     public bool IsReady { get; protected set; }
+
+    private Func<IngameIMyCubeBlock, IngameIMyTextSurface, object> _createTouchScreen;
+    private Action<IngameIMyCubeBlock, IngameIMyTextSurface> _removeTouchScreen;
+    private Action<string> _addSurfaceCoords;
+    private Action<string> _removeSurfaceCoords;
 
     /// <summary>
     /// Creates an instance of TouchScreen add adds it to the Touch Manager.
@@ -41,13 +41,13 @@ namespace Lima.API
     /// <param name="block">The block the touch point will be calculated.</param>
     /// <param name="surface">The surface the user will handle touch.</param>
     /// <returns></returns>
-    public object CreateTouchScreen(IMyCubeBlock block, IMyTextSurface surface) => _createTouchScreen?.Invoke(block, surface);
+    public object CreateTouchScreen(IngameIMyCubeBlock block, IngameIMyTextSurface surface) => _createTouchScreen?.Invoke(block, surface);
     /// <summary>
     /// Dispose the instance of TouchScreen related to given block and surface. And also removes from Touch Manager.
     /// </summary>
     /// <param name="block">The related block.</param>
     /// <param name="surface">The related surface.</param>
-    public void RemoveTouchScreen(IMyCubeBlock block, IMyTextSurface surface) => _removeTouchScreen?.Invoke(block, surface);
+    public void RemoveTouchScreen(IngameIMyCubeBlock block, IngameIMyTextSurface surface) => _removeTouchScreen?.Invoke(block, surface);
     /// <summary>
     /// This add surface coordinates to Touch Manager, it is a string similar to how GPS strings work.
     /// This same feature is also available using chat message commands with prefix /touch [string].
@@ -67,13 +67,6 @@ namespace Lima.API
     /// </summary>
     /// <param name="coords"></param>
     public void RemoveSurfaceCoords(string coords) => _removeSurfaceCoords?.Invoke(coords);
-    /// <returns>Current Touch Manager max interactive distance from player to screen.</returns>
-    public float GetMaxInteractiveDistance() => _getMaxInteractiveDistance?.Invoke() ?? -1f;
-    /// <summary>
-    /// Sets Touch Manager max interactive distance from player to screen.
-    /// </summary>
-    /// <param name="distance">Distance in game meters.</param>
-    public void SetMaxInteractiveDistance(float distance) => _setMaxInteractiveDistance?.Invoke(distance);
 
     protected virtual string GetRequestString() { return "ApiRequestTouch"; }
 
@@ -147,8 +140,6 @@ namespace Lima.API
       AssignMethod(delegates, "RemoveTouchScreen", ref _removeTouchScreen);
       AssignMethod(delegates, "AddSurfaceCoords", ref _addSurfaceCoords);
       AssignMethod(delegates, "RemoveSurfaceCoords", ref _removeSurfaceCoords);
-      AssignMethod(delegates, "GetMaxInteractiveDistance", ref _getMaxInteractiveDistance);
-      AssignMethod(delegates, "SetMaxInteractiveDistance", ref _setMaxInteractiveDistance);
       AssignMethod(delegates, "TouchScreen_GetBlock", ref ApiDelegator.TouchScreen_GetBlock);
       AssignMethod(delegates, "TouchScreen_GetSurface", ref ApiDelegator.TouchScreen_GetSurface);
       AssignMethod(delegates, "TouchScreen_GetIndex", ref ApiDelegator.TouchScreen_GetIndex);
@@ -199,15 +190,15 @@ namespace Lima.API
   /// </summary>
   public class TouchApiDelegator
   {
-    public Func<object, IMyCubeBlock> TouchScreen_GetBlock;
-    public Func<object, IMyTextSurface> TouchScreen_GetSurface;
+    public Func<object, IngameIMyCubeBlock> TouchScreen_GetBlock;
+    public Func<object, IngameIMyTextSurface> TouchScreen_GetSurface;
     public Func<object, int> TouchScreen_GetIndex;
     public Func<object, bool> TouchScreen_IsOnScreen;
     public Func<object, Vector2> TouchScreen_GetCursorPosition;
     public Func<object, float> TouchScreen_GetInteractiveDistance;
     public Action<object, float> TouchScreen_SetInteractiveDistance;
     public Func<object, int> TouchScreen_GetRotation;
-    public Func<object, IMyCubeBlock, IMyTextSurface, bool> TouchScreen_CompareWithBlockAndSurface;
+    public Func<object, IngameIMyCubeBlock, IngameIMyTextSurface, bool> TouchScreen_CompareWithBlockAndSurface;
     public Action<object> TouchScreen_ForceDispose;
 
     public Func<object, object> TouchCursor_New;
@@ -252,7 +243,7 @@ namespace Lima.API
   }
   /// <summary>
   /// TouchScreen is responsible for calculating screen direction and position from player.
-  /// Each <see cref="IMyTextSurface"/> on a <see cref="IMyCubeBlock"/> may have it.
+  /// Each <see cref="IngameIMyTextSurface"/> on a <see cref="IngameIMyTextSurface"/> may have it.
   /// <see href="https://github.com/adrianulima/TouchScreenAPI/blob/main/Data/Scripts/Lima/Touch/TouchScreen.cs"/>
   /// </summary>
   public class TouchScreen : WrapperBase<TouchApiDelegator>
@@ -261,15 +252,15 @@ namespace Lima.API
     /// Do not call this ctor directly, unless you have the reference of the original object from the API.
     /// </summary>
     public TouchScreen(object internalObject) : base(internalObject) { }
-    public IMyCubeBlock Block { get { return Api.TouchScreen_GetBlock.Invoke(InternalObj); } }
-    public IMyTextSurface Surface { get { return Api.TouchScreen_GetSurface.Invoke(InternalObj); } }
+    public IngameIMyCubeBlock Block { get { return Api.TouchScreen_GetBlock.Invoke(InternalObj); } }
+    public IngameIMyTextSurface Surface { get { return Api.TouchScreen_GetSurface.Invoke(InternalObj); } }
     public int Index { get { return Api.TouchScreen_GetIndex.Invoke(InternalObj); } }
     public bool IsOnScreen { get { return Api.TouchScreen_IsOnScreen.Invoke(InternalObj); } }
     public Vector2 CursorPosition { get { return Api.TouchScreen_GetCursorPosition.Invoke(InternalObj); } }
     public float InteractiveDistance { get { return Api.TouchScreen_GetInteractiveDistance.Invoke(InternalObj); } }
     public void SetInteractiveDistance(float distance) => Api.TouchScreen_SetInteractiveDistance.Invoke(InternalObj, distance);
     public int Rotation { get { return Api.TouchScreen_GetRotation.Invoke(InternalObj); } }
-    public bool CompareWithBlockAndSurface(IMyCubeBlock block, IMyTextSurface surface) => Api.TouchScreen_CompareWithBlockAndSurface.Invoke(InternalObj, block, surface);
+    public bool CompareWithBlockAndSurface(IngameIMyCubeBlock block, IngameIMyTextSurface surface) => Api.TouchScreen_CompareWithBlockAndSurface.Invoke(InternalObj, block, surface);
     public void ForceDispose() => Api.TouchScreen_ForceDispose.Invoke(InternalObj);
   }
   /// <summary>

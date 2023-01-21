@@ -57,7 +57,7 @@ namespace Lima
         return;
 
       _app = new ElectricNetworkInfoApp(electricManager, SaveConfigAction);
-      _app.InitApp(this.Block as MyCubeBlock, this.Surface as IMyTextSurface);
+      _app.InitApp(this.Block, this.Surface);
       _app.CreateElements();
       _app.Theme.Scale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 2);
 
@@ -126,12 +126,12 @@ namespace Lima
       Dispose();
     }
 
-    private MySprite GetAccessDeniedSprite()
+    private MySprite GetMessageSprite(string message)
     {
       return new MySprite()
       {
         Type = SpriteType.TEXT,
-        Data = "Electric Network Info\nThis App is not shared with you!",
+        Data = message,
         RotationOrScale = 0.7f,
         Color = _surface.ScriptForegroundColor,
         Alignment = TextAlignment.CENTER,
@@ -143,15 +143,14 @@ namespace Lima
     {
       try
       {
-        if (!_init && ticks++ < (6 * 2)) // 2 secs
-          return;
+        var initMessage = !_init && ticks++ < (6 * 2);// 2 seconds
 
-        if (!IsOwnerOrFactionShare())
+        if (initMessage || !IsOwnerOrFactionShare())
         {
           base.Run();
           using (var frame = m_surface.DrawFrame())
           {
-            frame.Add(GetAccessDeniedSprite());
+            frame.Add(GetMessageSprite(initMessage ? "Use middle mouse to click." : "Electric Network Info\nThis Block is not shared with you!"));
             frame.Dispose();
           }
           return;
