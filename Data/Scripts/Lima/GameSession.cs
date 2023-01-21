@@ -32,6 +32,8 @@ namespace Lima
       NetGridHandler.Init();
       NetGridHandler.AutoBroadcastEnabled = false;
 
+      Instance = this;
+
       if (MyAPIGateway.Utilities.IsDedicated)
       {
         // Only for server
@@ -41,7 +43,6 @@ namespace Lima
       }
 
       // Only for clients
-      Instance = this;
       Api = new TouchUiKit();
       Api.Load();
     }
@@ -105,8 +106,10 @@ namespace Lima
         foreach (var manager in _electricManagers)
           manager.Dispose();
 
-      GameSession.Instance.NetBlockHandler.MessageReceivedEvent -= NetwrokBlockReceivedServer;
-      GameSession.Instance.NetGridHandler.MessageReceivedEvent -= NetwrokGridReceivedServer;
+      if (NetBlockHandler != null)
+        NetBlockHandler.MessageReceivedEvent -= NetwrokBlockReceivedServer;
+      if (NetGridHandler != null)
+        NetGridHandler.MessageReceivedEvent -= NetwrokGridReceivedServer;
       NetBlockHandler?.Dispose();
       NetGridHandler?.Dispose();
       Api?.Unload();
