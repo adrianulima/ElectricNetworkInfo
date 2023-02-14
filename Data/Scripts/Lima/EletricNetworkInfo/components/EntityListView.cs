@@ -38,6 +38,7 @@ namespace Lima
       _scrollView = new TouchScrollView(ViewDirection.Column);
       _scrollView.Padding = new Vector4(2, 2, 2, 0);
       _scrollView.Gap = 2;
+      _scrollView.ScrollWheelStep = 36;
       AddChild(_scrollView);
     }
 
@@ -58,9 +59,7 @@ namespace Lima
         }
         _scrollView.RemoveChild(v);
       }
-
       _views.Clear();
-
       _odd = 0;
     }
 

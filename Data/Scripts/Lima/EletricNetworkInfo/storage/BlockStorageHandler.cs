@@ -98,7 +98,15 @@ namespace Lima
         blockContent.BlockId = block.EntityId;
       }
       else if (block.Storage.TryGetValue(StorageGuid, out rawData))
+      {
         blockContent = MyAPIGateway.Utilities.SerializeFromBinary<BlockStorageContent>(Convert.FromBase64String(rawData));
+      }
+      else
+      {
+        blockContent = new BlockStorageContent();
+        blockContent.NetworkId = MyAPIGateway.Session.Player.SteamUserId;
+        blockContent.BlockId = block.EntityId;
+      }
 
       if (blockContent != null)
       {
