@@ -54,6 +54,7 @@ namespace Lima
         entity.UpdateValues();
       }
       ProductionList.FillLastView();
+      ProductionList.ScrollWheelStep = 36 * this.App?.Theme.Scale ?? 1;
 
       ConsumptionList.SetScrollViewBgColor(bgColor);
       ConsumptionList.RemoveAllChildren(_pooler);
@@ -71,6 +72,7 @@ namespace Lima
         entity.UpdateValues();
       }
       ConsumptionList.FillLastView();
+      ConsumptionList.ScrollWheelStep = 36 * this.App?.Theme.Scale ?? 1;
     }
 
     public void Dispose()

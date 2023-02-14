@@ -138,6 +138,18 @@ namespace Lima
       };
     }
 
+    int _prevWheel = 0;
+    private void UpdateScale()
+    {
+      var wheelDelta = MyAPIGateway.Input.MouseScrollWheelValue();
+      if (_app.Screen.IsOnScreen && wheelDelta != _prevWheel && MyAPIGateway.Input.IsAnyCtrlKeyPressed() && MyAPIGateway.Input.IsAnyShiftKeyPressed())
+      {
+        var minScale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 1.5f);
+        _app.Theme.Scale = MathHelper.Min(1.5f, MathHelper.Max(minScale, _app.Theme.Scale + Math.Sign(wheelDelta - _prevWheel) * 0.1f));
+      }
+      _prevWheel = wheelDelta;
+    }
+
     public override void Run()
     {
       try
@@ -160,6 +172,8 @@ namespace Lima
 
         if (_app == null)
           return;
+
+        UpdateScale();
 
         base.Run();
         using (var frame = m_surface.DrawFrame())

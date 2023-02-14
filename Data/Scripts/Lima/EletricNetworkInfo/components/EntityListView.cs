@@ -13,6 +13,12 @@ namespace Lima
     private TouchScrollView _scrollView;
     private List<TouchView> _views = new List<TouchView>();
 
+    public float ScrollWheelStep
+    {
+      get { return _scrollView.ScrollWheelStep; }
+      set { _scrollView.ScrollWheelStep = value; }
+    }
+
     public string Title;
     private int _cols;
 
