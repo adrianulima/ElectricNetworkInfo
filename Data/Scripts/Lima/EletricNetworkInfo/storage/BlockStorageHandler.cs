@@ -57,6 +57,9 @@ namespace Lima
 
     [ProtoMember(5)]
     public List<Color> ChartDataColors;
+
+    [ProtoMember(6)]
+    public float? ThemeScale;
   }
 
   public class BlockStorageHandler

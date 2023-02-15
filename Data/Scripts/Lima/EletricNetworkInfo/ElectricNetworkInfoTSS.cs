@@ -70,14 +70,6 @@ namespace Lima
       _terminalBlock.OnMarkForClose += BlockMarkedForClose;
     }
 
-    private bool IsOwnerOrFactionShare()
-    {
-      var player = MyAPIGateway.Session.Player;
-      var relation = (_block.OwnerId > 0 ? player.GetRelationTo(_block.OwnerId) : MyRelationsBetweenPlayerAndBlock.NoOwnership);
-
-      return relation == MyRelationsBetweenPlayerAndBlock.Owner || relation == MyRelationsBetweenPlayerAndBlock.FactionShare;
-    }
-
     private void SaveConfigAction()
     {
       var appContent = new AppContent()
@@ -86,7 +78,8 @@ namespace Lima
         Layout = _app.WindowBarButtons.CurrentLayout,
         ChartIntervalIndex = _app.OverviewPanel.ChartPanel.ChartIntervalIndex,
         BatteryChartEnabled = _app.OverviewPanel.ChartPanel.BatteryOutputAsProduction,
-        ChartDataColors = _app.OverviewPanel.ChartPanel.DataColors
+        ChartDataColors = _app.OverviewPanel.ChartPanel.DataColors,
+        ThemeScale = _app.Theme.Scale
       };
 
       var blockContent = GameSession.Instance.BlockHandler.SaveAppContent(_block, appContent);
@@ -156,7 +149,7 @@ namespace Lima
       {
         var initMessage = !_init && ticks++ < (6 * 2);// 2 seconds
 
-        if (initMessage || !IsOwnerOrFactionShare())
+        if (initMessage || !Utils.IsOwnerOrFactionShare(_block, MyAPIGateway.Session.Player))
         {
           base.Run();
           using (var frame = m_surface.DrawFrame())
