@@ -131,16 +131,24 @@ namespace Lima
       };
     }
 
-    int _prevWheel = 0;
     private void UpdateScale()
     {
-      var wheelDelta = MyAPIGateway.Input.MouseScrollWheelValue();
-      if (_app.Screen.IsOnScreen && wheelDelta != _prevWheel && MyAPIGateway.Input.IsAnyCtrlKeyPressed() && MyAPIGateway.Input.IsAnyShiftKeyPressed())
+      var ctrl = MyAPIGateway.Input.IsAnyCtrlKeyPressed();
+      if (!ctrl || !_app.Screen.IsOnScreen || MyAPIGateway.Gui.IsCursorVisible)
+        return;
+
+      var plus = MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.Add) || MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.OemPlus);
+      var minus = false;
+      if (!plus)
+        minus = MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.Subtract) || MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.OemMinus);
+
+      if (plus || minus)
       {
+        var sign = plus ? 1 : -1;
         var minScale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 1.5f);
-        _app.Theme.Scale = MathHelper.Min(1.5f, MathHelper.Max(minScale, _app.Theme.Scale + Math.Sign(wheelDelta - _prevWheel) * 0.1f));
+        _app.Theme.Scale = MathHelper.Min(1.5f, MathHelper.Max(minScale, _app.Theme.Scale + sign * 0.1f));
+        SaveConfigAction();
       }
-      _prevWheel = wheelDelta;
     }
 
     public override void Run()

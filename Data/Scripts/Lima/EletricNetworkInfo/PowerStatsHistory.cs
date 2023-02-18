@@ -1,7 +1,6 @@
 using System;
 using VRage;
 
-
 namespace Lima
 {
   using Interval = MyTuple<string, int, ElectricNetworkManager.PowerStats[]>;
