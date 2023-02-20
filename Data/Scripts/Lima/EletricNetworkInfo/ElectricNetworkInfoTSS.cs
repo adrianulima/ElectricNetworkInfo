@@ -147,6 +147,13 @@ namespace Lima
         var sign = plus ? 1 : -1;
         var minScale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 1.5f);
         _app.Theme.Scale = MathHelper.Min(1.5f, MathHelper.Max(minScale, _app.Theme.Scale + sign * 0.1f));
+        _app.Cursor.Scale = _app.Theme.Scale;
+        SaveConfigAction();
+      }
+      else if (MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.NumPad0) || MyAPIGateway.Input.IsKeyPress(VRage.Input.MyKeys.D0))
+      {
+        _app.Theme.Scale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 2);
+        _app.Cursor.Scale = _app.Theme.Scale;
         SaveConfigAction();
       }
     }

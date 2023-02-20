@@ -96,6 +96,7 @@ namespace Lima
     {
       var themeScale = content.ThemeScale ?? 0;
       Theme.Scale = themeScale > 0 ? themeScale : 1;
+      Cursor.Scale = Theme.Scale;
       WindowBarButtons.CurrentLayout = content.Layout;
       OverviewPanel.ApplySettings(content, _electricMan);
 
