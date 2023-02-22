@@ -64,6 +64,8 @@ namespace Lima
     public readonly Dictionary<string, MyTuple<int, float, MyCubeBlock>> ProductionBlocks = new Dictionary<string, MyTuple<int, float, MyCubeBlock>>();
     public readonly Dictionary<string, MyTuple<int, float, MyCubeBlock>> ConsumptionBlocks = new Dictionary<string, MyTuple<int, float, MyCubeBlock>>();
 
+    private string _batteryName = "";
+
     public ElectricNetworkManager(IMyCubeBlock lcdBlock)
     {
       _lcdBlocks = new List<IMyCubeBlock>() { lcdBlock };
@@ -153,7 +155,11 @@ namespace Lima
     private void HandleBlock(MyCubeBlock block)
     {
       if (block is IMyBatteryBlock)
+      {
+        if (_batteryName == "" || block.BlockDefinition.BlockPairName == "BatteryBlock")
+          _batteryName = block.DefinitionDisplayNameText;
         _inputList.Add(block);
+      }
       else
       {
         var thruster = block as MyThrust;
@@ -245,13 +251,14 @@ namespace Lima
       return false;
     }
 
-    private void UpdatePowerDict(Dictionary<string, MyTuple<int, float, MyCubeBlock>> dict, MyCubeBlock block, float power)
+    private void UpdatePowerDict(Dictionary<string, MyTuple<int, float, MyCubeBlock>> dict, MyCubeBlock block, float power, string customKey = "")
     {
+      var k = customKey != "" ? customKey : block.DefinitionDisplayNameText;
       MyTuple<int, float, MyCubeBlock> count = new MyTuple<int, float, MyCubeBlock>(0, 0, null);
-      if (dict.TryGetValue(block.DefinitionDisplayNameText, out count))
-        dict[block.DefinitionDisplayNameText] = new MyTuple<int, float, MyCubeBlock>(count.Item1 + 1, count.Item2 + power, count.Item3);
+      if (dict.TryGetValue(k, out count))
+        dict[k] = new MyTuple<int, float, MyCubeBlock>(count.Item1 + 1, count.Item2 + power, count.Item3);
       else
-        dict.Add(block.DefinitionDisplayNameText, new MyTuple<int, float, MyCubeBlock>(1, power, block));
+        dict.Add(k, new MyTuple<int, float, MyCubeBlock>(1, power, block));
     }
 
     private void UpdateDistributiorStatus()
@@ -304,9 +311,13 @@ namespace Lima
           var cons = sink.CurrentInputByType(_electricityId);
           CurrentPowerStats.Consumption += cons;
 
+          var customKey = "";
           IMyBatteryBlock battery = block as IMyBatteryBlock;
           if (battery != null)
           {
+            if (battery.ChargeMode == Sandbox.ModAPI.Ingame.ChargeMode.Discharge)
+              continue;
+            customKey = $"{_batteryName} \"{battery.ChargeMode}\"";
             CurrentBatteryStats.BatteryCharge += battery.CurrentStoredPower;
             CurrentBatteryStats.BatteryMaxCharge += battery.MaxStoredPower;
 
@@ -330,7 +341,7 @@ namespace Lima
               CurrentPowerStats.MaxConsumption += Math.Max(cons, sink.MaxRequiredInputByType(_electricityId));
           }
 
-          UpdatePowerDict(ConsumptionBlocks, block, cons);
+          UpdatePowerDict(ConsumptionBlocks, block, cons, customKey);
         }
       }
 
@@ -339,9 +350,14 @@ namespace Lima
         var source = block.Components?.Get<MyResourceSourceComponent>();
         if (source != null)
         {
+          var customKey = "";
           var prod = source.CurrentOutputByType(_electricityId);
-          if (block is IMyBatteryBlock)
+          IMyBatteryBlock battery = block as IMyBatteryBlock;
+          if (battery != null)
           {
+            if (battery.ChargeMode == Sandbox.ModAPI.Ingame.ChargeMode.Recharge)
+              continue;
+            customKey = $"{_batteryName} \"{battery.ChargeMode}\"";
             CurrentPowerStats.BatteryOutput += prod;
             CurrentPowerStats.BatteryMaxOutput += source.MaxOutputByType(_electricityId);
           }
@@ -350,7 +366,7 @@ namespace Lima
             CurrentPowerStats.Production += prod;
             CurrentPowerStats.MaxProduction += source.MaxOutputByType(_electricityId);
           }
-          UpdatePowerDict(ProductionBlocks, block, prod);
+          UpdatePowerDict(ProductionBlocks, block, prod, customKey);
         }
       }
 
