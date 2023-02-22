@@ -26,11 +26,15 @@ namespace Lima
       if (_pool.Count > 0)
       {
         entt = (EntityItem)_pool.Dequeue();
-        entt.Title = title;
-        entt.UpdateColors(textColor);
+        entt.Title = title.TrimStart();
       }
       else
-        entt = new EntityItem(title, textColor);
+        entt = new EntityItem(title.TrimStart(), textColor);
+
+      if (title.StartsWith(" "))
+        entt.UpdateColors(Color.Goldenrod);
+      else
+        entt.UpdateColors(textColor);
 
       return entt;
     }

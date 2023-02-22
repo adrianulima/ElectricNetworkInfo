@@ -45,6 +45,7 @@ namespace Lima
       ConsumptionList.Scale = new Vector2(ConsumptionList.Cols, 1);
 
       var bgColor = App.Theme.GetMainColorDarker(2);
+      var entityColor = App.Theme.GetMainColorDarker(4);
       ProductionList.SetScrollViewBgColor(bgColor);
       ProductionList.RemoveAllChildren(_pooler);
 
@@ -53,7 +54,7 @@ namespace Lima
       foreach (var item in productionList)
       {
         var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
-        entity.BgColor = App.Theme.GetMainColorDarker(4);
+        entity.BgColor = entityColor;
         entity.Count = item.Value.Item1;
         entity.Value = item.Value.Item2;
         entity.MaxValue = electricMan.CurrentPowerStats.Production + electricMan.CurrentPowerStats.BatteryOutput;
@@ -72,7 +73,7 @@ namespace Lima
       foreach (var item in consumptionList)
       {
         var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
-        entity.BgColor = App.Theme.GetMainColorDarker(4);
+        entity.BgColor = entityColor;
         entity.Count = item.Value.Item1;
         entity.Value = item.Value.Item2;
         entity.MaxValue = electricMan.CurrentPowerStats.Consumption;

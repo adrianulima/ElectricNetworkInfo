@@ -254,6 +254,8 @@ namespace Lima
     private void UpdatePowerDict(Dictionary<string, MyTuple<int, float, MyCubeBlock>> dict, MyCubeBlock block, float power, string customKey = "")
     {
       var k = customKey != "" ? customKey : block.DefinitionDisplayNameText;
+      if (block.CubeGrid.EntityId != _lcdBlocks[0].CubeGrid.EntityId)
+        k = $" {k}";
       MyTuple<int, float, MyCubeBlock> count = new MyTuple<int, float, MyCubeBlock>(0, 0, null);
       if (dict.TryGetValue(k, out count))
         dict[k] = new MyTuple<int, float, MyCubeBlock>(count.Item1 + 1, count.Item2 + power, count.Item3);

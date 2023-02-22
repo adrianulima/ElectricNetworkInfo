@@ -36,7 +36,7 @@ namespace Lima
       _icon = new Icon("", new Vector2(30));
       _icon.Margin = new Vector4(0, 0, 2, 0);
       _icon.Bg = true;
-      _icon.SpriteColor = new Color(128, 128, 128);
+      _icon.SpriteColor = new Color(148, 148, 148);
       AddChild(_icon);
 
       _wrapperView = new TouchView(ViewDirection.Column);
