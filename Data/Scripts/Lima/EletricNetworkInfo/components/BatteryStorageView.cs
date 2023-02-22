@@ -133,22 +133,21 @@ namespace Lima
       _timeLeftView.Position = pos - new Vector2(size.X / 2, 0);
       _timeLeftView.Pixels = new Vector2(size.X / scale, 14);
 
+      _icon.SpriteSize = new Vector2(size.X) / scale;
       var iconPos = pos + new Vector2(0, size.Y / 2);
-      _icon.Position = iconPos;
-      _icon.SpriteSize = new Vector2(size.X);
+      _icon.Position = iconPos + new Vector2(0, -(_icon.SpriteSize.Y * scale) / 2);
 
       _tick++;
       if (_tick > 6)
         _tick = 0;
 
       var anim = (float)_tick / 6;
-
       if (InputRatio > 0)
       {
         var animInput = anim * InputRatio;
         _inputArrow.Enabled = true;
-        _inputArrow.SpriteSize = new Vector2(20, 12) * scale;
-        _inputArrow.Position = iconPos + new Vector2(size.X / 2 - (_inputArrow.SpriteSize.X / 2), animInput * -(_icon.SpriteSize.Y));
+        _inputArrow.SpriteSize = new Vector2(20, 12);
+        _inputArrow.Position = iconPos + new Vector2((size.X / 2 - (_inputArrow.SpriteSize.X / 2) * scale), animInput * -(_icon.SpriteSize.Y * scale));
         _inputArrow.SpriteColor = new Color(mainColor, animInput * 1f);
       }
       else
@@ -158,8 +157,8 @@ namespace Lima
       {
         var animOutput = anim * OutputRatio;
         _outputArrow.Enabled = true;
-        _outputArrow.SpriteSize = new Vector2(20, 12) * scale;
-        _outputArrow.Position = iconPos + new Vector2(size.X / 2 - (_inputArrow.SpriteSize.X / 2), animOutput * (_icon.SpriteSize.Y));
+        _outputArrow.SpriteSize = new Vector2(20, 12);
+        _outputArrow.Position = iconPos + new Vector2((size.X / 2 - (_inputArrow.SpriteSize.X / 2) * scale), animOutput * (_icon.SpriteSize.Y * scale));
         _outputArrow.SpriteColor = new Color(mainColor, animOutput * 1f);
       }
       else

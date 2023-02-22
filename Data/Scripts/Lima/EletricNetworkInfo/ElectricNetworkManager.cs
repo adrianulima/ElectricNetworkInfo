@@ -61,8 +61,8 @@ namespace Lima
     private readonly List<MyCubeBlock> _outputList = new List<MyCubeBlock>();
     private readonly List<MyCubeBlock> _thrustersList = new List<MyCubeBlock>();
 
-    public readonly Dictionary<string, Vector2> ProductionBlocks = new Dictionary<string, Vector2>();
-    public readonly Dictionary<string, Vector2> ConsumptionBlocks = new Dictionary<string, Vector2>();
+    public readonly Dictionary<string, MyTuple<int, float, MyCubeBlock>> ProductionBlocks = new Dictionary<string, MyTuple<int, float, MyCubeBlock>>();
+    public readonly Dictionary<string, MyTuple<int, float, MyCubeBlock>> ConsumptionBlocks = new Dictionary<string, MyTuple<int, float, MyCubeBlock>>();
 
     public ElectricNetworkManager(IMyCubeBlock lcdBlock)
     {
@@ -245,13 +245,13 @@ namespace Lima
       return false;
     }
 
-    private void UpdatePowerDict(Dictionary<string, Vector2> dict, MyCubeBlock block, float power)
+    private void UpdatePowerDict(Dictionary<string, MyTuple<int, float, MyCubeBlock>> dict, MyCubeBlock block, float power)
     {
-      Vector2 count = Vector2.Zero;
+      MyTuple<int, float, MyCubeBlock> count = new MyTuple<int, float, MyCubeBlock>(0, 0, null);
       if (dict.TryGetValue(block.DefinitionDisplayNameText, out count))
-        dict[block.DefinitionDisplayNameText] = new Vector2(count.X + 1, count.Y + power);
+        dict[block.DefinitionDisplayNameText] = new MyTuple<int, float, MyCubeBlock>(count.Item1 + 1, count.Item2 + power, count.Item3);
       else
-        dict.Add(block.DefinitionDisplayNameText, new Vector2(1, power));
+        dict.Add(block.DefinitionDisplayNameText, new MyTuple<int, float, MyCubeBlock>(1, power, block));
     }
 
     private void UpdateDistributiorStatus()

@@ -20,12 +20,12 @@ namespace Lima
     }
 
     public string Title;
-    private int _cols;
+    public int Cols;
 
     public EntityListView(string title, int cols = 2) : base(ViewDirection.Column)
     {
       Title = title;
-      _cols = cols;
+      Cols = cols;
 
       CreateElements();
     }
@@ -75,17 +75,17 @@ namespace Lima
 
       var view = _views.Last<TouchView>();
       var childCount = view.Children.Count;
-      if (childCount < _cols)
+      if (childCount < Cols)
       {
         var fill = new TouchView();
         view.AddChild(fill);
-        fill.Scale = new Vector2(_cols - childCount, 0);
+        fill.Scale = new Vector2(Cols - childCount, 0);
       }
     }
 
     public void AddItem(EntityItem item)
     {
-      if (_odd % _cols != 0)
+      if (_odd % Cols != 0)
       {
         var view = _views.Last<TouchView>();
         view.AddChild(item);

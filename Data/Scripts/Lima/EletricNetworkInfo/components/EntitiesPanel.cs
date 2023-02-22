@@ -1,6 +1,7 @@
 using VRageMath;
 using Lima.API;
 using System.Linq;
+using Sandbox.ModAPI;
 
 namespace Lima
 {
@@ -23,9 +24,9 @@ namespace Lima
 
       var bgColor = App.Theme.GetMainColorDarker(1);
 
-      ConsumptionList = new EntityListView("CONSUMERS", 3);
+      ConsumptionList = new EntityListView("CONSUMERS", 2);
       ConsumptionList.SetScrollViewBgColor(bgColor);
-      ConsumptionList.Scale = new Vector2(3, 1);
+      ConsumptionList.Scale = new Vector2(2, 1);
       AddChild(ConsumptionList);
 
       ProductionList = new EntityListView("PRODUCERS", 1);
@@ -36,20 +37,27 @@ namespace Lima
 
     public void UpdateValues(ElectricNetworkManager electricMan)
     {
-      var bgColor = App.Theme.GetMainColorDarker(2);
 
+      var cols = MathHelper.FloorToInt(GetSize().X / 160);
+      if (cols < 2)
+        cols = 2;
+      ConsumptionList.Cols = cols - 1;
+      ConsumptionList.Scale = new Vector2(ConsumptionList.Cols, 1);
+
+      var bgColor = App.Theme.GetMainColorDarker(2);
       ProductionList.SetScrollViewBgColor(bgColor);
       ProductionList.RemoveAllChildren(_pooler);
 
       var productionList = electricMan.ProductionBlocks.ToList();
-      productionList.Sort((pair1, pair2) => pair2.Value.Y.CompareTo(pair1.Value.Y));
+      productionList.Sort((pair1, pair2) => pair2.Value.Item2.CompareTo(pair1.Value.Item2));
       foreach (var item in productionList)
       {
         var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
         entity.BgColor = App.Theme.GetMainColorDarker(4);
-        entity.Count = (int)item.Value.X;
-        entity.Value = item.Value.Y;
+        entity.Count = item.Value.Item1;
+        entity.Value = item.Value.Item2;
         entity.MaxValue = electricMan.CurrentPowerStats.Production + electricMan.CurrentPowerStats.BatteryOutput;
+        entity.IconTexture = GameSession.Instance.Api.GetBlockIconSprite(item.Value.Item3);
         ProductionList.AddItem(entity);
         entity.UpdateValues();
       }
@@ -60,14 +68,15 @@ namespace Lima
       ConsumptionList.RemoveAllChildren(_pooler);
 
       var consumptionList = electricMan.ConsumptionBlocks.ToList();
-      consumptionList.Sort((pair1, pair2) => pair2.Value.Y.CompareTo(pair1.Value.Y));
+      consumptionList.Sort((pair1, pair2) => pair2.Value.Item2.CompareTo(pair1.Value.Item2));
       foreach (var item in consumptionList)
       {
         var entity = _pooler.GetEntityItem(item.Key, App.Theme.WhiteColor);
         entity.BgColor = App.Theme.GetMainColorDarker(4);
-        entity.Count = (int)item.Value.X;
-        entity.Value = item.Value.Y;
+        entity.Count = item.Value.Item1;
+        entity.Value = item.Value.Item2;
         entity.MaxValue = electricMan.CurrentPowerStats.Consumption;
+        entity.IconTexture = GameSession.Instance.Api.GetBlockIconSprite(item.Value.Item3);
         ConsumptionList.AddItem(entity);
         entity.UpdateValues();
       }

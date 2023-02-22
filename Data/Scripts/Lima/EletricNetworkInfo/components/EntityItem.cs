@@ -10,13 +10,16 @@ namespace Lima
     public int Count;
     public float Value;
     public float MaxValue;
+    public string IconTexture;
 
+    private TouchView _wrapperView;
     private TouchView _titleView;
     private TouchLabel _titleLabel;
     private TouchLabel _countLabel;
     private TouchProgressBar _progressBar;
+    private Icon _icon;
 
-    public EntityItem(string title, Color textColor) : base(ViewDirection.Column)
+    public EntityItem(string title, Color textColor) : base(ViewDirection.Row)
     {
       Title = title;
       SetStyles();
@@ -30,10 +33,20 @@ namespace Lima
 
     private void CreateElements(Color textColor)
     {
+      _icon = new Icon("", new Vector2(30));
+      _icon.Margin = new Vector4(0, 0, 2, 0);
+      _icon.Bg = true;
+      _icon.SpriteColor = new Color(128, 128, 128);
+      AddChild(_icon);
+
+      _wrapperView = new TouchView(ViewDirection.Column);
+      _wrapperView.Scale = Vector2.One;
+      AddChild(_wrapperView);
+
       _titleView = new TouchView(ViewDirection.Row);
       _titleView.Scale = new Vector2(1, 0);
       _titleView.Pixels = new Vector2(0, 14);
-      AddChild(_titleView);
+      _wrapperView.AddChild(_titleView);
 
       _titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.LEFT);
       _titleLabel.TextColor = textColor;
@@ -49,7 +62,7 @@ namespace Lima
       _progressBar.Scale = new Vector2(1, 0);
       _progressBar.Pixels = new Vector2(0, 16);
       _progressBar.Label.FontSize = 0.35f;
-      AddChild(_progressBar);
+      _wrapperView.AddChild(_progressBar);
     }
 
     public void UpdateColors(Color textColor)
@@ -75,6 +88,7 @@ namespace Lima
       _progressBar.Label.Text = sv;
       _progressBar.MaxValue = MaxValue;
       _progressBar.Value = Value;
+      _icon.SpriteImage = IconTexture;
     }
   }
 }
