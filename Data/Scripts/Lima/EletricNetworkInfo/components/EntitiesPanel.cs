@@ -37,7 +37,6 @@ namespace Lima
 
     public void UpdateValues(ElectricNetworkManager electricMan)
     {
-
       var cols = MathHelper.FloorToInt(GetSize().X / 160);
       if (cols < 2)
         cols = 2;

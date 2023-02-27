@@ -12,6 +12,7 @@ namespace Lima
 
     private TouchScrollView _scrollView;
     private List<TouchView> _views = new List<TouchView>();
+    private List<EntityItem> _entities = new List<EntityItem>();
 
     public float ScrollWheelStep
     {
@@ -51,6 +52,7 @@ namespace Lima
     public void Dispose()
     {
       _views.Clear();
+      _entities.Clear();
     }
 
     public void RemoveAllChildren(EntityItemPooler pooler)
@@ -58,14 +60,15 @@ namespace Lima
       foreach (var v in _views)
       {
         foreach (var ch in v.Children)
-        {
-          var entt = ch as EntityItem;
-          if (entt != null) pooler.PutEntityItem(entt);
           v.RemoveChild(ch);
-        }
         _scrollView.RemoveChild(v);
       }
+
+      foreach (var entt in _entities)
+        pooler.PutEntityItem(entt);
+
       _views.Clear();
+      _entities.Clear();
       _odd = 0;
     }
 
@@ -85,6 +88,7 @@ namespace Lima
 
     public void AddItem(EntityItem item)
     {
+      _entities.Add(item);
       if (_odd % Cols != 0)
       {
         var view = _views.Last<TouchView>();
