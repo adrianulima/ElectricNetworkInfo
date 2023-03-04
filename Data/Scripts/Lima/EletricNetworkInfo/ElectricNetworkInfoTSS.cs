@@ -29,7 +29,6 @@ namespace Lima
       _block = block;
       _surface = surface;
       _terminalBlock = (IMyTerminalBlock)block;
-
     }
 
     public void Init()
@@ -107,19 +106,6 @@ namespace Lima
       Dispose();
     }
 
-    private MySprite GetMessageSprite(string message)
-    {
-      return new MySprite()
-      {
-        Type = SpriteType.TEXT,
-        Data = message,
-        RotationOrScale = 0.7f,
-        Color = _surface.ScriptForegroundColor,
-        Alignment = TextAlignment.CENTER,
-        Size = _surface.SurfaceSize
-      };
-    }
-
     private void UpdateScale()
     {
       var ctrl = MyAPIGateway.Input.IsAnyCtrlKeyPressed();
@@ -147,18 +133,71 @@ namespace Lima
       }
     }
 
+    private MySprite GetMessageSprite(string message)
+    {
+      return new MySprite()
+      {
+        Type = SpriteType.TEXT,
+        Data = message,
+        RotationOrScale = 0.7f,
+        Color = _surface.ScriptForegroundColor,
+        Alignment = TextAlignment.CENTER,
+        Size = _surface.SurfaceSize
+      };
+    }
+
+    private MySprite[] GetProgressSprite(float ratio)
+    {
+      var viewport = (_surface.TextureSize - _surface.SurfaceSize) / 2f;
+      var angle = MathHelper.TwoPi * ratio;
+      var size = new Vector2(MathHelper.Min(_surface.SurfaceSize.X, _surface.SurfaceSize.Y)) * 0.5f;
+      var pos = new Vector2(viewport.X + (_surface.SurfaceSize.X - size.X) * 0.5f, viewport.Y + _surface.SurfaceSize.Y * 0.5f);
+
+      var circ1 = new MySprite()
+      {
+        Type = SpriteType.TEXTURE,
+        Data = "Screen_LoadingBar",
+        RotationOrScale = angle,
+        Color = _surface.ScriptForegroundColor,
+        Position = pos,
+        Size = size
+      };
+
+      var circ2 = new MySprite()
+      {
+        Type = SpriteType.TEXTURE,
+        Data = "Screen_LoadingBar",
+        RotationOrScale = MathHelper.Pi * -angle,
+        Color = _surface.ScriptForegroundColor,
+        Position = new Vector2(viewport.X + (_surface.SurfaceSize.X - size.X * 0.5f) * 0.5f, pos.Y),
+        Size = size * 0.5f
+      };
+
+      return new MySprite[] { circ2, circ1 };
+    }
+
     public override void Run()
     {
+      if (ticks == 0)
+      {
+        ticks++;
+        base.Run();
+        return;
+      }
+
       try
       {
-        var initMessage = !_init && ticks++ < (6 * 2);// 2 seconds
+        var loading = !_init && ticks++ < (2 + 6); // 1 second
 
-        if (initMessage || !Utils.IsOwnerOrFactionShare(_block, MyAPIGateway.Session.Player))
+        if (loading || !Utils.IsOwnerOrFactionShare(_block, MyAPIGateway.Session.Player))
         {
           base.Run();
           using (var frame = m_surface.DrawFrame())
           {
-            frame.Add(GetMessageSprite(initMessage ? "Use middle mouse to click." : "Electric Network Info\nThis Block is not shared with you!"));
+            if (loading)
+              frame.AddRange(GetProgressSprite((float)(ticks - 2) / 6f));
+            else
+              frame.Add(GetMessageSprite("Electric Network Info\nThis Block is not shared with you!"));
             frame.Dispose();
           }
           return;
