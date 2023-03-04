@@ -132,10 +132,16 @@ namespace Lima
       }
     }
 
+    int _skipTicks = 1000;
     public void UpdateValues()
     {
       if (OverviewPanel.Enabled)
         OverviewPanel.UpdateValues(_electricMan);
+
+      // Skip updates if not aiming the screen for more than 5s
+      if (!Screen.IsOnScreen && ++_skipTicks < 5)
+        return;
+      _skipTicks = 0;
 
       if (EntitiesPanel.Enabled)
         EntitiesPanel.UpdateValues(_electricMan);
