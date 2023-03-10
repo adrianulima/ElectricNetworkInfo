@@ -44,9 +44,7 @@ namespace Lima
       if (electricManager == null)
         return;
 
-      _app = new ElectricNetworkInfoApp(electricManager, SaveConfigAction);
-      _app.InitApp(this.Block, this.Surface);
-      _app.CreateElements();
+      _app = new ElectricNetworkInfoApp(_block, _surface, electricManager, SaveConfigAction);
       _app.Theme.Scale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 2);
       _app.Cursor.Scale = _app.Theme.Scale;
 

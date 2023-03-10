@@ -2,6 +2,8 @@ using Lima.API;
 using VRage.Utils;
 using System.Text;
 using System;
+using Sandbox.ModAPI;
+using VRage.Game.ModAPI;
 
 namespace Lima
 {
@@ -21,16 +23,13 @@ namespace Lima
 
     public Action SaveConfigAction;
 
-    public ElectricNetworkInfoApp(ElectricNetworkManager electricManager, Action saveConfigAction)
+    public ElectricNetworkInfoApp(IMyCubeBlock block, IMyTextSurface surface, ElectricNetworkManager electricManager, Action saveConfigAction) : base(block, surface)
     {
       _electricMan = electricManager;
       _electricMan.UpdateEvent += UpdateValues;
 
       SaveConfigAction = saveConfigAction;
-    }
 
-    public void CreateElements()
-    {
       var windowBar = new TouchWindowBar("Electric Network Info");
       AddChild(windowBar);
 
