@@ -106,5 +106,10 @@ namespace Lima
       }
       _odd++;
     }
+
+    public void ResetScroll()
+    {
+      _scrollView.Scroll = 0;
+    }
   }
 }

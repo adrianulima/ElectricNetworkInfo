@@ -1,7 +1,6 @@
 using VRageMath;
 using Lima.API;
 using System.Linq;
-using Sandbox.ModAPI;
 
 namespace Lima
 {
@@ -82,6 +81,12 @@ namespace Lima
       }
       ConsumptionList.FillLastView();
       ConsumptionList.ScrollWheelStep = 36 * this.App?.Theme.Scale ?? 1;
+    }
+
+    public void ResetScrolls()
+    {
+      ProductionList.ResetScroll();
+      ConsumptionList.ResetScroll();
     }
 
     public void Dispose()

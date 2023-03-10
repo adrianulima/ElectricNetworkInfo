@@ -129,6 +129,9 @@ namespace Lima
           EntitiesPanel.Enabled = true;
           break;
       }
+
+      if (EntitiesPanel.Enabled)
+        EntitiesPanel.ResetScrolls();
     }
 
     int _skipTicks = 1000;
