@@ -82,7 +82,7 @@ namespace Lima
       {
         var fill = new TouchView();
         view.AddChild(fill);
-        fill.Scale = new Vector2(Cols - childCount, 0);
+        fill.Flex = new Vector2(Cols - childCount, 0);
       }
     }
 
@@ -99,7 +99,7 @@ namespace Lima
         var view = new TouchView(ViewDirection.Row);
         view.Gap = 2;
         view.AddChild(item);
-        view.Scale = new Vector2(1, 0);
+        view.Flex = new Vector2(1, 0);
         view.Pixels = new Vector2(0, 34);
         _scrollView.AddChild(view);
         _views.Add(view);

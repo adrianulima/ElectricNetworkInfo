@@ -22,7 +22,7 @@ namespace Lima
       SpriteColor = color;
 
       Pixels = size;
-      Scale = Vector2.Zero;
+      Flex = Vector2.Zero;
 
       RegisterUpdate(Update);
     }

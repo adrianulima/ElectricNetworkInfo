@@ -28,7 +28,7 @@ namespace Lima
       // Bars
       var barsPanel = new TouchView(ViewDirection.Row);
       barsPanel.Pixels = new Vector2(0, 32 * 0.4f + 24);
-      barsPanel.Scale = new Vector2(1, 0);
+      barsPanel.Flex = new Vector2(1, 0);
       barsPanel.Gap = 4;
       AddChild(barsPanel);
 

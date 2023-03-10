@@ -31,12 +31,12 @@ namespace Lima
 
       HelpBt = new TouchButton("?", OnClickHelp);
       HelpBt.Label.FontSize = 0.5f;
-      HelpBt.Scale = Vector2.Zero;
+      HelpBt.Flex = Vector2.Zero;
       HelpBt.Pixels = new Vector2(16);
       AddChild(HelpBt);
 
       SettingsButton = new TouchEmptyButton(OnClickSettings);
-      SettingsButton.Scale = Vector2.Zero;
+      SettingsButton.Flex = Vector2.Zero;
       SettingsButton.Pixels = new Vector2(16);
       AddChild(SettingsButton);
 
@@ -44,7 +44,7 @@ namespace Lima
       SettingsButton.AddChild(GearIcon);
 
       LayoutButton = new TouchEmptyButton(OnClickLayout);
-      LayoutButton.Scale = Vector2.Zero;
+      LayoutButton.Flex = Vector2.Zero;
       LayoutButton.Pixels = new Vector2(16);
       AddChild(LayoutButton);
 

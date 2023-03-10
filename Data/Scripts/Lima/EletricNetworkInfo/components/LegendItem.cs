@@ -35,7 +35,7 @@ namespace Lima
       _square = new TouchView();
       _square.BgColor = _color;
       _square.Pixels = new Vector2(8, 8);
-      _square.Scale = new Vector2(0, 0);
+      _square.Flex = new Vector2(0, 0);
       AddChild(_square);
 
       _titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.CENTER);

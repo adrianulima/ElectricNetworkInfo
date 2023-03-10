@@ -26,12 +26,12 @@ namespace Lima
 
       ConsumptionList = new EntityListView("CONSUMERS", 2);
       ConsumptionList.SetScrollViewBgColor(bgColor);
-      ConsumptionList.Scale = new Vector2(2, 1);
+      ConsumptionList.Flex = new Vector2(2, 1);
       AddChild(ConsumptionList);
 
       ProductionList = new EntityListView("PRODUCERS", 1);
       ProductionList.SetScrollViewBgColor(bgColor);
-      ProductionList.Scale = new Vector2(1, 1);
+      ProductionList.Flex = new Vector2(1, 1);
       AddChild(ProductionList);
     }
 
@@ -41,7 +41,7 @@ namespace Lima
       if (cols < 2)
         cols = 2;
       ConsumptionList.Cols = cols - 1;
-      ConsumptionList.Scale = new Vector2(ConsumptionList.Cols, 1);
+      ConsumptionList.Flex = new Vector2(ConsumptionList.Cols, 1);
 
       var bgColor = App.Theme.GetMainColorDarker(2);
       var entityColor = App.Theme.GetMainColorDarker(4);

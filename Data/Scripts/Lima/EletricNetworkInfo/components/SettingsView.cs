@@ -50,7 +50,7 @@ namespace Lima
       _containerView.Border = new Vector4(2, 2, 2, 0);
       _containerView.Padding = new Vector4(4);
       _containerView.Pixels = new Vector2(0, 48 * 4);
-      _containerView.Scale = new Vector2(1, 0);
+      _containerView.Flex = new Vector2(1, 0);
       _containerView.Gap = 8;
       AddChild(_containerView);
 
@@ -112,7 +112,7 @@ namespace Lima
       _legendsView = new TouchView(ViewDirection.Row);
       _legendsView.Alignment = ViewAlignment.Center;
       _legendsView.Padding = new Vector4(8, 0, 2, 0);
-      _legendsView.Scale = new Vector2(1, 0);
+      _legendsView.Flex = new Vector2(1, 0);
       _legendsView.Pixels = new Vector2(0, 20);
       _legendsView.BgColor = App.Theme.GetMainColorDarker(2);
       AddChild(_legendsView);
@@ -133,12 +133,12 @@ namespace Lima
       AddChild(buttonsContainer);
 
       var resetButton = new TouchButton("Reset Colors", OnClickReset);
-      resetButton.Scale = new Vector2(0.3f, 0);
+      resetButton.Flex = new Vector2(0.3f, 0);
       buttonsContainer.AddChild(resetButton);
 
       var cancelConfirmView = new TouchView(ViewDirection.Row);
       cancelConfirmView.Gap = 4;
-      cancelConfirmView.Scale = new Vector2(0.6f, 0);
+      cancelConfirmView.Flex = new Vector2(0.6f, 0);
       buttonsContainer.AddChild(cancelConfirmView);
 
       _cancelButton = new TouchButton("Cancel Changes", OnClickCancel);

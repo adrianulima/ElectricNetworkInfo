@@ -141,7 +141,7 @@ namespace Lima
       AddChild(_chartView);
 
       _labelsWrapper = new TouchView(ViewDirection.Column);
-      _labelsWrapper.Scale = new Vector2(0, 1);
+      _labelsWrapper.Flex = new Vector2(0, 1);
       _labelsWrapper.Pixels = new Vector2(50, 0);
       _labelsWrapper.Anchor = ViewAnchor.SpaceBetween;
       _chartView.AddChild(_labelsWrapper);
@@ -170,7 +170,7 @@ namespace Lima
       _legendsView = new TouchView(ViewDirection.Row);
       _legendsView.Alignment = ViewAlignment.Center;
       _legendsView.Padding = new Vector4(8, 0, 2, 0);
-      _legendsView.Scale = new Vector2(1, 0);
+      _legendsView.Flex = new Vector2(1, 0);
       _legendsView.Pixels = new Vector2(0, 20);
       AddChild(_legendsView);
 
@@ -186,7 +186,7 @@ namespace Lima
 
       var checkboxLabel = new TouchLabel("Battery", 0.4f, TextAlignment.RIGHT);
       checkboxLabel.Margin = new Vector4(0, 0, 4, 0);
-      checkboxLabel.Scale = new Vector2(0.5f, 0);
+      checkboxLabel.Flex = new Vector2(0.5f, 0);
       _legendsView.AddChild(checkboxLabel);
       _batteryCheckbox = new TouchCheckbox((bool v) =>
       {

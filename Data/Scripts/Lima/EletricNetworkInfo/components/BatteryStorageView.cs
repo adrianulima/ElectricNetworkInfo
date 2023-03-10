@@ -41,7 +41,7 @@ namespace Lima
 
     private void SetStyles()
     {
-      Scale = new Vector2(0, 1);
+      Flex = new Vector2(0, 1);
 
       _isOverloadBlackout = true;
       UpdateOverloadStatus(false);
@@ -72,7 +72,7 @@ namespace Lima
     {
       _progressBar = new TouchProgressBar(0, MaxValue, true);
       _progressBar.Pixels = new Vector2(_width, 0);
-      _progressBar.Scale = new Vector2(0, 1);
+      _progressBar.Flex = new Vector2(0, 1);
       _progressBar.Label.FontSize = 0.6f;
       _progressBar.Label.Alignment = TextAlignment.CENTER;
       AddChild(_progressBar);
@@ -95,7 +95,7 @@ namespace Lima
       _overloadView.BgColor = Color.Red;
       _overloadView.Padding = Vector4.UnitY * 1;
       _overloadView.Pixels = new Vector2(0, 12);
-      _overloadView.Scale = new Vector2(1, 0);
+      _overloadView.Flex = new Vector2(1, 0);
       AddChild(_overloadView);
 
       _overloadLabel = new TouchLabel("OVERLOAD", 0.35f, TextAlignment.CENTER);

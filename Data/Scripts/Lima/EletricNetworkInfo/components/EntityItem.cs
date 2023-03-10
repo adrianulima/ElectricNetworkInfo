@@ -40,11 +40,11 @@ namespace Lima
       AddChild(_icon);
 
       _wrapperView = new TouchView(ViewDirection.Column);
-      _wrapperView.Scale = Vector2.One;
+      _wrapperView.Flex = Vector2.One;
       AddChild(_wrapperView);
 
       _titleView = new TouchView(ViewDirection.Row);
-      _titleView.Scale = new Vector2(1, 0);
+      _titleView.Flex = new Vector2(1, 0);
       _titleView.Pixels = new Vector2(0, 14);
       _wrapperView.AddChild(_titleView);
 
@@ -54,12 +54,12 @@ namespace Lima
 
       _countLabel = new TouchLabel("0", 0.4f, TextAlignment.RIGHT);
       _countLabel.TextColor = textColor;
-      _countLabel.Scale = new Vector2(0, 1);
+      _countLabel.Flex = new Vector2(0, 1);
       _countLabel.Pixels = new Vector2(10, 0);
       _titleView.AddChild(_countLabel);
 
       _progressBar = new TouchProgressBar(0, MaxValue);
-      _progressBar.Scale = new Vector2(1, 0);
+      _progressBar.Flex = new Vector2(1, 0);
       _progressBar.Pixels = new Vector2(0, 16);
       _progressBar.Label.FontSize = 0.35f;
       _wrapperView.AddChild(_progressBar);
