@@ -11,7 +11,7 @@ namespace Lima
   {
     private ElectricNetworkManager _electricMan;
 
-    public TouchView MainView;
+    public View MainView;
     public WindowButtons WindowBarButtons;
     public OverviewPanel OverviewPanel;
     public EntitiesPanel EntitiesPanel;
@@ -30,13 +30,13 @@ namespace Lima
 
       SaveConfigAction = saveConfigAction;
 
-      var windowBar = new TouchWindowBar("Electric Network Info");
+      var windowBar = new WindowBar("Electric Network Info");
       AddChild(windowBar);
 
       WindowBarButtons = new WindowButtons(OnChangeConfig, OnChangePage);
       windowBar.AddChild(WindowBarButtons);
 
-      MainView = new TouchView();
+      MainView = new View();
       AddChild(MainView);
 
       OverviewPanel = new OverviewPanel(OnChangeConfig);

@@ -5,7 +5,7 @@ using Sandbox.ModAPI;
 
 namespace Lima
 {
-  public class EntitiesPanel : TouchView
+  public class EntitiesPanel : View
   {
     public EntitiesPanel()
     {

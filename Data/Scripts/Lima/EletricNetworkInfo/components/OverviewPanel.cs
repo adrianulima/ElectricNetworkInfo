@@ -5,7 +5,7 @@ using System;
 
 namespace Lima
 {
-  public class OverviewPanel : TouchView
+  public class OverviewPanel : View
   {
     public Action OnChangeConfig;
 
@@ -26,7 +26,7 @@ namespace Lima
       Gap = 4;
 
       // Bars
-      var barsPanel = new TouchView(ViewDirection.Row);
+      var barsPanel = new View(ViewDirection.Row);
       barsPanel.Pixels = new Vector2(0, 32 * 0.4f + 24);
       barsPanel.Flex = new Vector2(1, 0);
       barsPanel.Gap = 4;
@@ -39,7 +39,7 @@ namespace Lima
       BatteryOutputStatus = new StatusView("BATTERY OUTPUT");
       barsPanel.AddChild(BatteryOutputStatus);
 
-      var batteryAndChartPanel = new TouchView(ViewDirection.Row);
+      var batteryAndChartPanel = new View(ViewDirection.Row);
       batteryAndChartPanel.Gap = 4;
       AddChild(batteryAndChartPanel);
 

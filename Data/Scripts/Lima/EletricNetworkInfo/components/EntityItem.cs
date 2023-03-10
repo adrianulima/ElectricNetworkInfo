@@ -4,7 +4,7 @@ using VRage.Game.GUI.TextPanel;
 
 namespace Lima
 {
-  public class EntityItem : TouchView
+  public class EntityItem : View
   {
     public string Title;
     public int Count;
@@ -12,11 +12,11 @@ namespace Lima
     public float MaxValue;
     public string IconTexture;
 
-    private TouchView _wrapperView;
-    private TouchView _titleView;
-    private TouchLabel _titleLabel;
-    private TouchLabel _countLabel;
-    private TouchProgressBar _progressBar;
+    private View _wrapperView;
+    private View _titleView;
+    private Label _titleLabel;
+    private Label _countLabel;
+    private ProgressBar _progressBar;
     private Icon _icon;
 
     public EntityItem(string title, Color textColor) : base(ViewDirection.Row)
@@ -39,26 +39,26 @@ namespace Lima
       _icon.SpriteColor = new Color(148, 148, 148);
       AddChild(_icon);
 
-      _wrapperView = new TouchView(ViewDirection.Column);
+      _wrapperView = new View(ViewDirection.Column);
       _wrapperView.Flex = Vector2.One;
       AddChild(_wrapperView);
 
-      _titleView = new TouchView(ViewDirection.Row);
+      _titleView = new View(ViewDirection.Row);
       _titleView.Flex = new Vector2(1, 0);
       _titleView.Pixels = new Vector2(0, 14);
       _wrapperView.AddChild(_titleView);
 
-      _titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.LEFT);
+      _titleLabel = new Label(Title, 0.4f, TextAlignment.LEFT);
       _titleLabel.TextColor = textColor;
       _titleView.AddChild(_titleLabel);
 
-      _countLabel = new TouchLabel("0", 0.4f, TextAlignment.RIGHT);
+      _countLabel = new Label("0", 0.4f, TextAlignment.RIGHT);
       _countLabel.TextColor = textColor;
       _countLabel.Flex = new Vector2(0, 1);
       _countLabel.Pixels = new Vector2(10, 0);
       _titleView.AddChild(_countLabel);
 
-      _progressBar = new TouchProgressBar(0, MaxValue);
+      _progressBar = new ProgressBar(0, MaxValue);
       _progressBar.Flex = new Vector2(1, 0);
       _progressBar.Pixels = new Vector2(0, 16);
       _progressBar.Label.FontSize = 0.35f;

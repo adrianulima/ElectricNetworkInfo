@@ -4,20 +4,20 @@ using System;
 
 namespace Lima
 {
-  public class SettingsView : TouchScrollView
+  public class SettingsView : ScrollView
   {
     private int _chartIndex = 0;
 
-    private TouchChart _chart;
-    private TouchLabel[] _slidersLabels;
-    private TouchSlider[] _sliders;
+    private Chart _chart;
+    private Label[] _slidersLabels;
+    private Slider[] _sliders;
     private LegendItem[] _legends;
 
-    private TouchView _containerView;
-    private TouchView _legendsView;
+    private View _containerView;
+    private View _legendsView;
     private ChartView _chartView;
-    private TouchButton _cancelButton;
-    private TouchButton _confirmButton;
+    private Button _cancelButton;
+    private Button _confirmButton;
 
     private bool _hasChanges = false;
     public Action OnChangeConfig;
@@ -34,18 +34,18 @@ namespace Lima
     {
       Padding = new Vector4(4);
 
-      var chartColorsLabel = new TouchLabel("Chart Colors", 0.4f);
+      var chartColorsLabel = new Label("Chart Colors", 0.4f);
       chartColorsLabel.AutoBreakLine = true;
       AddChild(chartColorsLabel);
 
-      var intervalSwitcher = new TouchSwitch(new string[] { "Consumption", "Max Consum.", "Production", "Capacity" }, _chartIndex, (int v) =>
+      var intervalSwitcher = new Switch(new string[] { "Consumption", "Max Consum.", "Production", "Capacity" }, _chartIndex, (int v) =>
       {
         _chartIndex = v;
         UpdateSliders();
       });
       AddChild(intervalSwitcher);
 
-      _containerView = new TouchView(ViewDirection.Row);
+      _containerView = new View(ViewDirection.Row);
       _containerView.BorderColor = App.Theme.GetMainColorDarker(2);
       _containerView.Border = new Vector4(2, 2, 2, 0);
       _containerView.Padding = new Vector4(4);
@@ -54,49 +54,49 @@ namespace Lima
       _containerView.Gap = 8;
       AddChild(_containerView);
 
-      var slidersView = new TouchView(ViewDirection.Column);
+      var slidersView = new View(ViewDirection.Column);
       _containerView.AddChild(slidersView);
 
-      _slidersLabels = new TouchLabel[4];
-      _sliders = new TouchSlider[4];
+      _slidersLabels = new Label[4];
+      _sliders = new Slider[4];
       _legends = new LegendItem[4];
 
-      var slider1Wrapper = new TouchView();
-      _slidersLabels[0] = new TouchLabel("Red");
+      var slider1Wrapper = new View();
+      _slidersLabels[0] = new Label("Red");
       slider1Wrapper.AddChild(_slidersLabels[0]);
-      _sliders[0] = new TouchSlider(0, 255, OnChangecolor);
+      _sliders[0] = new Slider(0, 255, OnChangecolor);
       _sliders[0].IsInteger = true;
       slider1Wrapper.AddChild(_sliders[0]);
       slidersView.AddChild(slider1Wrapper);
 
-      var slider2Wrapper = new TouchView();
-      _slidersLabels[1] = new TouchLabel("Green");
+      var slider2Wrapper = new View();
+      _slidersLabels[1] = new Label("Green");
       slider2Wrapper.AddChild(_slidersLabels[1]);
-      _sliders[1] = new TouchSlider(0, 255, OnChangecolor);
+      _sliders[1] = new Slider(0, 255, OnChangecolor);
       _sliders[1].IsInteger = true;
       slider2Wrapper.AddChild(_sliders[1]);
       slidersView.AddChild(slider2Wrapper);
 
-      var slider3Wrapper = new TouchView();
-      _slidersLabels[2] = new TouchLabel("Blue");
+      var slider3Wrapper = new View();
+      _slidersLabels[2] = new Label("Blue");
       slider3Wrapper.AddChild(_slidersLabels[2]);
-      _sliders[2] = new TouchSlider(0, 255, OnChangecolor);
+      _sliders[2] = new Slider(0, 255, OnChangecolor);
       _sliders[2].IsInteger = true;
       slider3Wrapper.AddChild(_sliders[2]);
       slidersView.AddChild(slider3Wrapper);
 
-      var slider4Wrapper = new TouchView();
-      _slidersLabels[3] = new TouchLabel("Alpha");
+      var slider4Wrapper = new View();
+      _slidersLabels[3] = new Label("Alpha");
       slider4Wrapper.AddChild(_slidersLabels[3]);
-      _sliders[3] = new TouchSlider(0, 255, OnChangecolor);
+      _sliders[3] = new Slider(0, 255, OnChangecolor);
       _sliders[3].IsInteger = true;
       slider4Wrapper.AddChild(_sliders[3]);
       slidersView.AddChild(slider4Wrapper);
 
-      var chartWrapper = new TouchView();
+      var chartWrapper = new View();
       _containerView.AddChild(chartWrapper);
 
-      _chart = new TouchChart(10);
+      _chart = new Chart(10);
       _chart.DataSets.Add(new float[] { 8, 8, 8, 8, 8, 8, 9, 9, 9, 9 });
       _chart.DataSets.Add(new float[] { 7, 7, 7, 7, 7, 6, 6, 7, 8, 8 });
       _chart.DataSets.Add(new float[] { 6, 6, 6, 5, 5, 5, 6, 7, 6, 6 });
@@ -109,7 +109,7 @@ namespace Lima
       _chart.GridVerticalLines = 5;
       chartWrapper.AddChild(_chart);
 
-      _legendsView = new TouchView(ViewDirection.Row);
+      _legendsView = new View(ViewDirection.Row);
       _legendsView.Alignment = ViewAlignment.Center;
       _legendsView.Padding = new Vector4(8, 0, 2, 0);
       _legendsView.Flex = new Vector2(1, 0);
@@ -126,25 +126,25 @@ namespace Lima
       _legends[3] = new LegendItem("Capacity", _chartView.DataColors[0]);
       _legendsView.AddChild(_legends[3]);
 
-      var buttonsContainer = new TouchView(ViewDirection.Row);
+      var buttonsContainer = new View(ViewDirection.Row);
       buttonsContainer.Margin = new Vector4(0, 4, 0, 4);
       buttonsContainer.Gap = 4;
       buttonsContainer.Anchor = ViewAnchor.SpaceBetween;
       AddChild(buttonsContainer);
 
-      var resetButton = new TouchButton("Reset Colors", OnClickReset);
+      var resetButton = new Button("Reset Colors", OnClickReset);
       resetButton.Flex = new Vector2(0.3f, 0);
       buttonsContainer.AddChild(resetButton);
 
-      var cancelConfirmView = new TouchView(ViewDirection.Row);
+      var cancelConfirmView = new View(ViewDirection.Row);
       cancelConfirmView.Gap = 4;
       cancelConfirmView.Flex = new Vector2(0.6f, 0);
       buttonsContainer.AddChild(cancelConfirmView);
 
-      _cancelButton = new TouchButton("Cancel Changes", OnClickCancel);
+      _cancelButton = new Button("Cancel Changes", OnClickCancel);
       cancelConfirmView.AddChild(_cancelButton);
 
-      _confirmButton = new TouchButton("Confirm Changes", OnClickConfirm);
+      _confirmButton = new Button("Confirm Changes", OnClickConfirm);
       _confirmButton.Enabled = _hasChanges;
       cancelConfirmView.AddChild(_confirmButton);
 

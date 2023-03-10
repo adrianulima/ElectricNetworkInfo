@@ -4,14 +4,14 @@ using VRage.Game.GUI.TextPanel;
 
 namespace Lima
 {
-  public class LegendItem : TouchView
+  public class LegendItem : View
   {
     public string Title;
     public float Value;
 
     private Color _color;
-    private TouchLabel _titleLabel;
-    private TouchView _square;
+    private Label _titleLabel;
+    private View _square;
 
     public LegendItem(string title, Color color, float value = 0) : base(ViewDirection.Row)
     {
@@ -32,13 +32,13 @@ namespace Lima
       Gap = 4;
       Alignment = ViewAlignment.Center;
 
-      _square = new TouchView();
+      _square = new View();
       _square.BgColor = _color;
       _square.Pixels = new Vector2(8, 8);
       _square.Flex = new Vector2(0, 0);
       AddChild(_square);
 
-      _titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.CENTER);
+      _titleLabel = new Label(Title, 0.4f, TextAlignment.CENTER);
       _titleLabel.Alignment = TextAlignment.LEFT;
       AddChild(_titleLabel);
     }

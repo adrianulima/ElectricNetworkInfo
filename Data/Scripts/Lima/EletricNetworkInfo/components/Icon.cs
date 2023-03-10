@@ -4,7 +4,7 @@ using VRageMath;
 
 namespace Lima
 {
-  public class Icon : TouchEmptyElement
+  public class Icon : EmptyElement
   {
     public string SpriteImage;
     public Vector2 SpriteSize;

@@ -5,13 +5,13 @@ using VRageMath;
 
 namespace Lima
 {
-  public class WindowButtons : TouchView
+  public class WindowButtons : View
   {
-    public TouchButton HelpBt;
-    public TouchEmptyButton SettingsButton;
-    public TouchEmptyButton LayoutButton;
-    public TouchEmptyElement GearIcon;
-    public TouchEmptyElement LayoutIcon;
+    public Button HelpBt;
+    public EmptyButton SettingsButton;
+    public EmptyButton LayoutButton;
+    public EmptyElement GearIcon;
+    public EmptyElement LayoutIcon;
 
     public int CurrentLayout = 0;
 
@@ -29,26 +29,26 @@ namespace Lima
       Margin = new Vector4(4, 0, 4, 0);
       Gap = 4;
 
-      HelpBt = new TouchButton("?", OnClickHelp);
+      HelpBt = new Button("?", OnClickHelp);
       HelpBt.Label.FontSize = 0.5f;
       HelpBt.Flex = Vector2.Zero;
       HelpBt.Pixels = new Vector2(16);
       AddChild(HelpBt);
 
-      SettingsButton = new TouchEmptyButton(OnClickSettings);
+      SettingsButton = new EmptyButton(OnClickSettings);
       SettingsButton.Flex = Vector2.Zero;
       SettingsButton.Pixels = new Vector2(16);
       AddChild(SettingsButton);
 
-      GearIcon = new TouchEmptyElement();
+      GearIcon = new EmptyElement();
       SettingsButton.AddChild(GearIcon);
 
-      LayoutButton = new TouchEmptyButton(OnClickLayout);
+      LayoutButton = new EmptyButton(OnClickLayout);
       LayoutButton.Flex = Vector2.Zero;
       LayoutButton.Pixels = new Vector2(16);
       AddChild(LayoutButton);
 
-      LayoutIcon = new TouchEmptyElement();
+      LayoutIcon = new EmptyElement();
       LayoutButton.AddChild(LayoutIcon);
 
       RegisterUpdate(Update);

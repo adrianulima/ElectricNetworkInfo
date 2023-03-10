@@ -6,19 +6,19 @@ using VRage.Game.GUI.TextPanel;
 
 namespace Lima
 {
-  public class ChartView : TouchView
+  public class ChartView : View
   {
     private PowerStatsHistory _history;
 
-    private TouchChart _chart;
-    private TouchView _chartView;
-    private TouchView _legendsView;
-    private TouchView _labelsWrapper;
+    private Chart _chart;
+    private View _chartView;
+    private View _legendsView;
+    private View _labelsWrapper;
     private List<float[]> _dataSets;
     private LegendItem[] _legends;
-    private List<TouchLabel> _labels;
-    private TouchSwitch _intervalSwitcher;
-    private TouchCheckbox _batteryCheckbox;
+    private List<Label> _labels;
+    private Switch _intervalSwitcher;
+    private Checkbox _batteryCheckbox;
 
     private bool _batteryOutputAsProduction = true;
     public bool BatteryOutputAsProduction
@@ -104,7 +104,7 @@ namespace Lima
       {
         while (i > _labels.Count - 1)
         {
-          _labels.Add(new TouchLabel("1000 MW"));
+          _labels.Add(new Label("1000 MW"));
           _labels[i].FontSize = 0.4f;
           _labels[i].Alignment = TextAlignment.RIGHT;
           _labelsWrapper.AddChild(_labels[i]);
@@ -130,30 +130,30 @@ namespace Lima
 
     private void CreateElements(string[] intervalNames)
     {
-      _intervalSwitcher = new TouchSwitch(intervalNames, _chartIntervalIndex, (int v) =>
+      _intervalSwitcher = new Switch(intervalNames, _chartIntervalIndex, (int v) =>
       {
         ChartIntervalIndex = v;
       });
       AddChild(_intervalSwitcher);
 
-      _chartView = new TouchView(ViewDirection.Row);
+      _chartView = new View(ViewDirection.Row);
       _chartView.Padding = new Vector4(4);
       AddChild(_chartView);
 
-      _labelsWrapper = new TouchView(ViewDirection.Column);
+      _labelsWrapper = new View(ViewDirection.Column);
       _labelsWrapper.Flex = new Vector2(0, 1);
       _labelsWrapper.Pixels = new Vector2(50, 0);
       _labelsWrapper.Anchor = ViewAnchor.SpaceBetween;
       _chartView.AddChild(_labelsWrapper);
 
-      _labels = new List<TouchLabel>();
+      _labels = new List<Label>();
 
-      var chartWrapper = new TouchView(ViewDirection.Row);
+      var chartWrapper = new View(ViewDirection.Row);
       chartWrapper.Padding = new Vector4(4, 4, 0, 4);
       _chartView.AddChild(chartWrapper);
 
       var intervals = 30;
-      _chart = new TouchChart(intervals);
+      _chart = new Chart(intervals);
       _dataSets = _chart.DataSets;
       _dataSets.Add(null);
       _dataSets.Add(null);
@@ -167,7 +167,7 @@ namespace Lima
       _chart.GridVerticalLines = 13;
       chartWrapper.AddChild(_chart);
 
-      _legendsView = new TouchView(ViewDirection.Row);
+      _legendsView = new View(ViewDirection.Row);
       _legendsView.Alignment = ViewAlignment.Center;
       _legendsView.Padding = new Vector4(8, 0, 2, 0);
       _legendsView.Flex = new Vector2(1, 0);
@@ -184,11 +184,11 @@ namespace Lima
       _legends[3] = new LegendItem("Capacity", DefaultColors[0]);
       _legendsView.AddChild(_legends[3]);
 
-      var checkboxLabel = new TouchLabel("Battery", 0.4f, TextAlignment.RIGHT);
+      var checkboxLabel = new Label("Battery", 0.4f, TextAlignment.RIGHT);
       checkboxLabel.Margin = new Vector4(0, 0, 4, 0);
       checkboxLabel.Flex = new Vector2(0.5f, 0);
       _legendsView.AddChild(checkboxLabel);
-      _batteryCheckbox = new TouchCheckbox((bool v) =>
+      _batteryCheckbox = new Checkbox((bool v) =>
       {
         BatteryOutputAsProduction = v;
         UpdateChartDataSets();

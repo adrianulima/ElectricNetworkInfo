@@ -6,12 +6,12 @@ using VRage.Game.GUI.TextPanel;
 
 namespace Lima
 {
-  public class EntityListView : TouchView
+  public class EntityListView : View
   {
     private int _odd = 0;
 
-    private TouchScrollView _scrollView;
-    private List<TouchView> _views = new List<TouchView>();
+    private ScrollView _scrollView;
+    private List<View> _views = new List<View>();
     private List<EntityItem> _entities = new List<EntityItem>();
 
     public float ScrollWheelStep
@@ -38,11 +38,11 @@ namespace Lima
 
     private void CreateElements()
     {
-      var titleLabel = new TouchLabel(Title, 0.4f, TextAlignment.LEFT);
+      var titleLabel = new Label(Title, 0.4f, TextAlignment.LEFT);
       titleLabel.Alignment = TextAlignment.CENTER;
       AddChild(titleLabel);
 
-      _scrollView = new TouchScrollView(ViewDirection.Column);
+      _scrollView = new ScrollView(ViewDirection.Column);
       _scrollView.Padding = new Vector4(2, 2, 2, 0);
       _scrollView.Gap = 2;
       _scrollView.ScrollWheelStep = 36;
@@ -76,11 +76,11 @@ namespace Lima
     {
       if (_views.Count == 0) return;
 
-      var view = _views.Last<TouchView>();
+      var view = _views.Last<View>();
       var childCount = view.Children.Count;
       if (childCount < Cols)
       {
-        var fill = new TouchView();
+        var fill = new View();
         view.AddChild(fill);
         fill.Flex = new Vector2(Cols - childCount, 0);
       }
@@ -91,12 +91,12 @@ namespace Lima
       _entities.Add(item);
       if (_odd % Cols != 0)
       {
-        var view = _views.Last<TouchView>();
+        var view = _views.Last<View>();
         view.AddChild(item);
       }
       else
       {
-        var view = new TouchView(ViewDirection.Row);
+        var view = new View(ViewDirection.Row);
         view.Gap = 2;
         view.AddChild(item);
         view.Flex = new Vector2(1, 0);
