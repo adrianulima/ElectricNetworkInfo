@@ -84,7 +84,7 @@ namespace Lima
     {
       var color = App.Theme.WhiteColor;
 
-      if (SettingsButton.Handler.IsMousePressed)
+      if (SettingsButton.Handler.Mouse1.IsPressed)
         color = App.Theme.GetMainColorDarker(4);
 
       GearIcon.GetSprites().Clear();

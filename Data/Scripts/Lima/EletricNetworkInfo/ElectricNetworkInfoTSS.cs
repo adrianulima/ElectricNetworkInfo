@@ -196,7 +196,6 @@ namespace Lima
               frame.AddRange(GetProgressSprite((float)(ticks - 2) / 6f));
             else
               frame.Add(GetMessageSprite("Electric Network Info\nThis Block is not shared with you!"));
-            frame.Dispose();
           }
           return;
         }
@@ -214,7 +213,6 @@ namespace Lima
         {
           _app.ForceUpdate();
           frame.AddRange(_app.GetSprites());
-          frame.Dispose();
         }
       }
       catch (Exception e)
