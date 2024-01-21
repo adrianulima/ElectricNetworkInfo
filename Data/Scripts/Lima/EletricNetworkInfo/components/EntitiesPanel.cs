@@ -18,8 +18,8 @@ namespace Lima
     public void CreateElements()
     {
       Direction = ViewDirection.Row;
-      Padding = new Vector4(4);
-      Gap = 4;
+      Padding = new Vector4(2);
+      Gap = 2;
 
       var bgColor = App.Theme.GetMainColorDarker(1);
 

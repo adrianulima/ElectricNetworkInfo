@@ -81,8 +81,11 @@ namespace Lima
       if (childCount < Cols)
       {
         var fill = new View();
+        var n = Cols - childCount;
+        if (n > 1)
+          fill.Pixels = Vector2.UnitX * ((n - 1) * view.Gap);
         view.AddChild(fill);
-        fill.Flex = new Vector2(Cols - childCount, 0);
+        fill.Flex = new Vector2(n, 0);
       }
     }
 

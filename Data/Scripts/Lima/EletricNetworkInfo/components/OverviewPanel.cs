@@ -22,8 +22,8 @@ namespace Lima
 
     public void CreateElements(PowerStatsHistory history)
     {
-      Padding = new Vector4(4);
-      Gap = 4;
+      Padding = new Vector4(2);
+      Gap = 2;
 
       // Bars
       var barsPanel = new View(ViewDirection.Row);

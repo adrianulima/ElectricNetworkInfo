@@ -170,6 +170,8 @@ namespace Lima
           MyResourceSinkComponent sink = block.Components?.Get<MyResourceSinkComponent>();
           if (sink != null && sink.AcceptedResources.IndexOf(_electricityId) != -1)
             _inputList.Add(block);
+          else if (block is IMyGyro && block.IsFunctional)
+            _inputList.Add(block);
         }
       }
 
@@ -344,6 +346,11 @@ namespace Lima
           }
 
           UpdatePowerDict(ConsumptionBlocks, block, cons, customKey);
+        }
+        else if (block is IMyGyro)
+        {
+          if ((block as IMyGyro).Enabled)
+            UpdatePowerDict(ConsumptionBlocks, block, (block as MyGyro).RequiredPowerInput, "");
         }
       }
 

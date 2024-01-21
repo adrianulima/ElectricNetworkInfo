@@ -12,7 +12,7 @@ namespace Lima
 
     public void CreateElements()
     {
-      Padding = new Vector4(4);
+      Padding = new Vector4(2);
 
       var consumptionLabel = new Label("Consumption", 0.4f);
       consumptionLabel.AutoBreakLine = true;

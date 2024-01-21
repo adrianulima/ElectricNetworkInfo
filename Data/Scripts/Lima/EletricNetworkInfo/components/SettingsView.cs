@@ -32,7 +32,7 @@ namespace Lima
 
     public void CreateElements()
     {
-      Padding = new Vector4(4);
+      Padding = new Vector4(2);
 
       var chartColorsLabel = new Label("Chart Colors", 0.4f);
       chartColorsLabel.AutoBreakLine = true;
