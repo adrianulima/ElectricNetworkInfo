@@ -258,7 +258,11 @@ namespace Lima
       var k = customKey != "" ? customKey : block.DefinitionDisplayNameText;
       if (block.CubeGrid.EntityId != _lcdBlocks[0].CubeGrid.EntityId)
         k = $" {k}";
-      MyTuple<int, float, MyCubeBlock> count = new MyTuple<int, float, MyCubeBlock>(0, 0, null);
+
+      if (k == null)
+        k = "Unknown";
+
+      MyTuple<int, float, MyCubeBlock> count;
       if (dict.TryGetValue(k, out count))
         dict[k] = new MyTuple<int, float, MyCubeBlock>(count.Item1 + 1, count.Item2 + power, count.Item3);
       else
